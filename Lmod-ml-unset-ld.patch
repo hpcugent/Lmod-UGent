@@ -1,3 +1,7 @@
+# This patch makes sure the LD_LIBRARY_PATH is unset prior to running
+# any lmod command. In this way, no matter what module is loaded,
+# lmod will keep on working
+# ToDo: csh
 diff --git a/init/bash.in b/init/bash.in
 index bdee611..7df2042 100644
 --- a/init/bash.in
