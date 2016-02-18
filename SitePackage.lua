@@ -46,9 +46,9 @@ function load_hook(t)
 
    if (mode() ~= "load") then return end
    local user  = os.getenv("USER")
-   local jobid = os.getenv("PBS_JOBID")
-   local institute_cluster = os.getenv("VSC_INSTITUTE_CLUSTER")
-   local arch_local = os.getenv("VSC_ARCH_LOCAL")
+   local jobid = os.getenv("PBS_JOBID") or ""
+   local institute_cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
+   local arch_local = os.getenv("VSC_ARCH_LOCAL") or ""
    local msg   = string.format("user=%s, cluster=%s, arch=%s, module=%s, fn=%s, jobid=%s",
                                user, institute_cluster, arch_local, t.modFullName, t.fn, jobid)
    os.execute("logger -t lmod -p user.notice " .. msg)
