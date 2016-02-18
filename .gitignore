@@ -25,5 +25,6 @@ rpms/python-vsc-packages-*/vsc/__init__.py
 MANIFEST
 dist/
 build/
+rpmbuild/
 
 Lmod-*.tar.gz
