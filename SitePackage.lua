@@ -33,25 +33,50 @@
 --------------------------------------------------------------------------
 
 require("strict")
-local Dbg = require("Dbg")
-local dbg = Dbg:dbg()
-local hook   = require("Hook")
+require("cmdfuncs")
+local Dbg  = require("Dbg")
+local dbg  = Dbg:dbg()
+local hook = require("Hook")
+
 
 -- By using the hook.register function, this function "load_hook" is called
 -- ever time a module is loaded with the file name and the module name.
-function load_hook(t)
+local function load_hook(t)
    -- the arg t is a table:
    --     t.modFullName:  the module full name: (i.e: gcc/4.7.2)
-   --     t.fn:           The file name: (i.e /apps/modulefiles/Core/gcc/4.7.2.lua)
+   --     t.fn:           the file name: (i.e /apps/modulefiles/Core/gcc/4.7.2.lua)
 
    if (mode() ~= "load") then return end
-   local user  = os.getenv("USER")
+   local user = os.getenv("USER")
    local jobid = os.getenv("PBS_JOBID") or ""
-   local institute_cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
-   local arch_local = os.getenv("VSC_ARCH_LOCAL") or ""
-   local msg   = string.format("user=%s, cluster=%s, arch=%s, module=%s, fn=%s, jobid=%s",
-                               user, institute_cluster, arch_local, t.modFullName, t.fn, jobid)
+   local cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
+   local arch = os.getenv("VSC_ARCH_LOCAL") or ""
+   local msg = string.format("user=%s, cluster=%s, arch=%s, module=%s, fn=%s, jobid=%s",
+                             user, cluster, arch, t.modFullName, t.fn, jobid)
    os.execute("logger -t lmod -p user.notice " .. msg)
 end
 
-hook.register("load",load_hook)
+-- This hook is called after a restore operation
+local function restore_hook(t)
+   -- the arg t is a table:
+   --     t.collection: the input name of the collection
+   --     t.name:       the output name of the collection
+   --     t.fn:         The file name: (i.e /apps/modulefiles/Core/gcc/4.7.2.lua)
+
+   dbg.start{"restore_hook"}
+
+   local cluster = os.getenv("VSC_INSTITUTE_CLUSTER")
+   local def_cluster = os.getenv("VSC_DEFAULT_CLUSTER_MODULE")
+   if (not cluster or not def_cluster) then return end
+
+   if (cluster == def_cluster) then return end
+
+   dbg.print{"Have: ", cluster, " Switch to ", def_cluster}
+
+   Swap("cluster/" .. cluster, "cluster/" .. def_cluster)
+
+   dbg.fini()
+end
+
+hook.register("load", load_hook)
+hook.register("restore", restore_hook)

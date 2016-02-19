@@ -81,6 +81,7 @@ install -Dpm 644 %{SOURCE2} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 %changelog
 * Thu Feb 18 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.1.3-1ug
 - Adapt to UGent use
+
 * Thu Feb 11 2016 Orion Poplawski <orion@cora.nwra.com> - 6.1.3-1
 - Update to 6.1.3
 
