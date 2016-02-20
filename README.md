@@ -7,32 +7,31 @@ options and we don't allow environment-modules to coexist with Lmod.
 
 Our configure options
 ---------------------
-- caseIndependentSorting=yes
+- `caseIndependentSorting=yes`:
   Make avail and spider use case independent sorting
 
-- redirect=yes 
+- `redirect=yes`:
   Output to stdout instead stderr
 
-- autoSwap=no
-- disableNameAutoSwap=yes
+- `autoSwap=no`, `disableNameAutoSwap=yes`:
   We try to mimick the behaviour of environment-modules and don't 
   let Lmod to it's swapping magic when changing cluster modules.
   We basically only want swapping when a module with the same name
   and version exists.
 
-- shortTime=86400
+- `shortTime=86400`:
   Avoids that Lmod builds a user cache. The cache has a valid lifetime
   of 86400 (24h), and this tells Lmod not to write the cache to disk
   if it can be build in less then 24h.
 
-- pinVersions=yes
+- `pinVersions=yes`:
   Fix the version of packages saved in a collection. This avoids
   the need to rebuild the collection when the 'default' version
   of a package changes.
 
-- module-root-path=/etc/modulefiles/vsc
+- `module-root-path=/etc/modulefiles/vsc`
 
-- cachedLoads=yes
+- `cachedLoads=yes`:
   Use the cache to load modules. If the module is not in the cache, it
   cannot be loaded until the cache is rebuild. This avoids the costly
   stating of all directories when the module path is extend after
@@ -40,7 +39,7 @@ Our configure options
 
 Patches
 -------
-We add one patch to clear the LD_LIBRARY_PATH before any lmod command is
+We add one patch to clear the `$LD_LIBRARY_PATH` before any lmod command is
 executed. This makes sure that Lmod keeps on working, no matter what
 modules are loaded.
 
