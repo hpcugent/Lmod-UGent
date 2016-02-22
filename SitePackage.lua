@@ -79,4 +79,4 @@ local function restore_hook(t)
 end
 
 hook.register("load", load_hook)
-hook.register("restore", restore_hook)
+-- hook.register("restore", restore_hook)
