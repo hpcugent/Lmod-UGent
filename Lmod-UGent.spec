@@ -48,7 +48,7 @@ sed -i -e '/^#!/d' init/*.in
 
 
 %build
-%configure --prefix=%{_datadir} PS=/bin/ps --with-caseIndependentSorting=yes --with-redirect=yes --with-autoSwap=no --with-disableNameAutoSwap=yes --with-shortTime=86400 --with-pinVersions=yes --with-module-root-path=/etc/modulefiles/vsc
+%configure --prefix=%{_datadir} PS=/bin/ps --with-caseIndependentSorting=yes --with-redirect=yes --with-autoSwap=no --with-disableNameAutoSwap=yes --with-shortTime=86400 --with-pinVersions=yes --with-module-root-path=/etc/modulefiles/vsc --with-cachedLoads=yes
 make %{?_smp_mflags}
 
 
