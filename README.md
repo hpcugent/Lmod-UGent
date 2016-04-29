@@ -41,7 +41,10 @@ Patches
 -------
 We add one patch to clear the `$LD_LIBRARY_PATH` before any lmod command is
 executed. This makes sure that Lmod keeps on working, no matter what
-modules are loaded.
+modules are loaded. The original value of `$LD_LIBRARY_PATH` is saved to
+`$ORIG_LD_LIBRARY_PATH` and the startup hook (see below) will restore it
+when lua is already running. In this way, a new load will append to the correct
+value of `$LD_LIBRARY_PATH` and lua keeps on workings if other modules are loaded.
 
 SitePackage
 -----------
@@ -52,3 +55,5 @@ The SitePackage contains a couple of hooks:
   and OS, collections from a different cluster can be used. However,
   as the cluster module is also saved as part of the collection, we
   need to swap in the right one.
+- The startup hook is run on starting Lmod. It logs the loads requested by
+  the user and takes care of restoring the original `$LD_LIBRARY_PATH`.
