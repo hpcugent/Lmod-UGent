@@ -1,42 +1,15 @@
 --------------------------------------------------------------------------
--- Lmod License
---------------------------------------------------------------------------
---
---  Lmod is licensed under the terms of the MIT license reproduced below.
---  This means that Lmod is free software and can be used for both academic
---  and commercial purposes at absolutely no cost.
---
---  ----------------------------------------------------------------------
---
---  Copyright (C) 2008-2014 Robert McLay
---
---  Permission is hereby granted, free of charge, to any person obtaining
---  a copy of this software and associated documentation files (the
---  "Software"), to deal in the Software without restriction, including
---  without limitation the rights to use, copy, modify, merge, publish,
---  distribute, sublicense, and/or sell copies of the Software, and to
---  permit persons to whom the Software is furnished to do so, subject
---  to the following conditions:
---
---  The above copyright notice and this permission notice shall be
---  included in all copies or substantial portions of the Software.
---
---  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
---  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
---  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
---  NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
---  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
---  ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
---  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
---  THE SOFTWARE.
---
+-- The SitePackage customization for UGent-HPC
+-- Ward Poelmans <ward.poelmans@ugent.be>
 --------------------------------------------------------------------------
 
 require("strict")
 require("cmdfuncs")
-local Dbg  = require("Dbg")
-local dbg  = Dbg:dbg()
-local hook = require("Hook")
+require("utils")
+local Dbg   = require("Dbg")
+local dbg   = Dbg:dbg()
+local hook  = require("Hook")
+local posix = require("posix")
 
 
 -- By using the hook.register function, this function "load_hook" is called
@@ -78,5 +51,22 @@ local function restore_hook(t)
    dbg.fini()
 end
 
+-- This hook is called right after starting Lmod
+local function startup_hook(usrCmd)
+    -- usrCmd holds the currect active command
+   -- if you want access to all give arguments, use
+   -- local masterTbl = masterTbl()
+
+   dbg.start{"startup_hook"}
+
+   dbg.print{"Received usrCmd: ", usrCmd, "\n"}
+   local ld_library_path = os.getenv("ORIG_LD_LIBRARY_PATH") or ""
+   dbg.print{"Setting LD_LIBRARY_PATH to ", ld_library_path, "\n"}
+   posix.setenv("LD_LIBRARY_PATH", ld_library_path)
+
+   dbg.fini()
+end
+
 hook.register("load", load_hook)
--- hook.register("restore", restore_hook)
+hook.register("restore", restore_hook)
+hook.register("startup", startup_hook)
