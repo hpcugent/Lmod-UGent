@@ -61,8 +61,10 @@ local function startup_hook(usrCmd)
 
    dbg.print{"Received usrCmd: ", usrCmd, "\n"}
    local ld_library_path = os.getenv("ORIG_LD_LIBRARY_PATH") or ""
-   dbg.print{"Setting LD_LIBRARY_PATH to ", ld_library_path, "\n"}
-   posix.setenv("LD_LIBRARY_PATH", ld_library_path)
+   if ld_library_path ~= "" then
+       dbg.print{"Setting LD_LIBRARY_PATH to ", ld_library_path, "\n"}
+       posix.setenv("LD_LIBRARY_PATH", ld_library_path)
+   end
 
    dbg.fini()
 end
