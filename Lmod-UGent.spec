@@ -1,7 +1,7 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        6.3.2
+Version:        6.3.3
 Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
@@ -19,7 +19,6 @@ BuildRequires:  lua-json
 BuildRequires:  lua-posix
 BuildRequires:  lua-term
 BuildRequires:  tcl
-BuildRequires:  zsh
 Requires:       lua-filesystem
 Requires:       lua-json
 Requires:       lua-posix
@@ -79,6 +78,10 @@ install -Dpm 644 %{SOURCE2} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 
 
 %changelog
+* Wed May 11 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.3.3-1ug
+- Sync to upstream Lmod version
+- Drop zsh as build dep (we don't use it)
+
 * Thu Feb 18 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.1.3-1ug
 - Adapt to UGent use
 
