@@ -2,7 +2,7 @@
 
 Name:           Lmod
 Version:        6.3.3
-Release:        1.ug%{?dist}
+Release:        2.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -18,11 +18,11 @@ BuildRequires:  lua-filesystem
 BuildRequires:  lua-json
 BuildRequires:  lua-posix
 BuildRequires:  lua-term
-BuildRequires:  tcl
 Requires:       lua-filesystem
 Requires:       lua-json
 Requires:       lua-posix
 Requires:       lua-term
+Requires:       tcl
 Requires:       /bin/ps
 Conflicts:      environment-modules
 
