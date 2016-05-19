@@ -64,7 +64,7 @@ def main():
 
         opts.log.info("Checking the Lmod cache freshness")
         # until the json api from the Lmod config is ready, we hardcode the path
-        LMOD_CACHE_TIMESTAMP = "/home/ward/tmp/lmodcache/timestamp"
+        LMOD_CACHE_TIMESTAMP = "/apps/gent/lmodcache/timestamp"
         timestamp = os.stat(LMOD_CACHE_TIMESTAMP)
 
         # give a warning when the cache is older then 2h
