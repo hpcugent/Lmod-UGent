@@ -2,7 +2,7 @@
 
 Name:           Lmod
 Version:        6.3.5
-Release:        1.ug%{?dist}
+Release:        4.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -11,6 +11,7 @@ URL:            https://www.tacc.utexas.edu/tacc-projects/lmod
 Source0:        https://github.com/TACC/Lmod/archive/%{version}.tar.gz#/Lmod-%{version}.tar.gz
 Source1:        macros.%{name}
 Source2:        SitePackage.lua
+Source3:        run_lmod_cache.py
 Patch0:         Lmod-ml-rename-ld-path.patch
 
 BuildArch:      noarch
@@ -65,6 +66,8 @@ ln -s %{_datadir}/lmod/lmod/init/csh %{buildroot}%{_sysconfdir}/profile.d/module
 install -Dpm 644 %{SOURCE1} %{buildroot}/%{macrosdir}/macros.%{name}
 # Override SitePackage.lua
 install -Dpm 644 %{SOURCE2} %{buildroot}%{_datadir}/lmod/%{version}/libexec
+# install icinga/nagios wrapper for the cache creation
+install -Dpm 755 %{SOURCE3} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 
 
 %files
@@ -78,6 +81,9 @@ install -Dpm 644 %{SOURCE2} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 
 
 %changelog
+* Thu May 19 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.3.5-2ug
+- Add icinga/nagios wrapper for cache creation script
+
 * Wed May 11 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.3.3-1ug
 - Sync to upstream Lmod version
 - Drop zsh as build dep (we don't use it)
