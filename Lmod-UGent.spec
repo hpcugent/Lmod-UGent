@@ -11,7 +11,7 @@ URL:            https://www.tacc.utexas.edu/tacc-projects/lmod
 Source0:        https://github.com/TACC/Lmod/archive/%{version}.tar.gz#/Lmod-%{version}.tar.gz
 Source1:        macros.%{name}
 Source2:        SitePackage.lua
-Source3:        check_lmod_cache.py
+Source3:        run_lmod_cache.py
 Patch0:         Lmod-ml-rename-ld-path.patch
 
 BuildArch:      noarch
