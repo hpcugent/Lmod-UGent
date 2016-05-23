@@ -73,9 +73,8 @@ def main():
             opts.log.info("Updating the Lmod cache")
             exitcode, msg = run_cache_create(config['modules_root'])
             if exitcode != 0:
-                errmsg = "Lmod cache update failed: %s" % msg
-                logger.error(errmsg)
-                opts.critical(errmsg)
+                logger.error("Lmod cache update failed: %s" % msg)
+                opts.critical("Lmod cache update failed")
                 sys.exit(NAGIOS_EXIT_CRITICAL)
 
         opts.log.info("Checking the Lmod cache freshness")
