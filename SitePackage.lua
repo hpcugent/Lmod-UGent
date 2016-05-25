@@ -62,7 +62,7 @@ local function startup_hook(usrCmd)
 
    dbg.print{"Received usrCmd: ", usrCmd, "\n"}
 
-   local cmd = usrCmd .. " " .. table.concat(masterTbl.pargs)
+   local cmd = (usrCmd or "") .. " " .. table.concat(masterTbl.pargs)
    local user = os.getenv("USER")
    local jobid = os.getenv("PBS_JOBID") or ""
    local cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
