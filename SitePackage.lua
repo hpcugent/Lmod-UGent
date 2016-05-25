@@ -24,7 +24,7 @@ local function load_hook(t)
    local jobid = os.getenv("PBS_JOBID") or ""
    local cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
    local arch = os.getenv("VSC_ARCH_LOCAL") or ""
-   local userload = "no"
+   local userload = "no"  -- FIXME: should be yes on user requested load of the module (not loaded as a dep)
    local msg = string.format("user=%s, cluster=%s, arch=%s, module=%s, fn=%s, userload=%s, jobid=%s",
                              user, cluster, arch, t.modFullName, t.fn, userload, jobid)
    os.execute("logger -t lmod -p user.notice -- " .. msg)
