@@ -24,9 +24,10 @@ local function load_hook(t)
    local jobid = os.getenv("PBS_JOBID") or ""
    local cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
    local arch = os.getenv("VSC_ARCH_LOCAL") or ""
-   local msg = string.format("user=%s, cluster=%s, arch=%s, module=%s, fn=%s, jobid=%s",
-                             user, cluster, arch, t.modFullName, t.fn, jobid)
-   os.execute("logger -t lmod -p user.notice " .. msg)
+   local userload = "no"  -- FIXME: should be yes on user requested load of the module (not loaded as a dep)
+   local msg = string.format("user=%s, cluster=%s, arch=%s, module=%s, fn=%s, userload=%s, jobid=%s",
+                             user, cluster, arch, t.modFullName, t.fn, userload, jobid)
+   os.execute("logger -t lmod -p user.notice -- " .. msg)
 end
 
 -- This hook is called after a restore operation
@@ -55,11 +56,21 @@ end
 local function startup_hook(usrCmd)
     -- usrCmd holds the currect active command
    -- if you want access to all give arguments, use
-   -- local masterTbl = masterTbl()
+   local masterTbl = masterTbl()
 
    dbg.start{"startup_hook"}
 
    dbg.print{"Received usrCmd: ", usrCmd, "\n"}
+
+   local cmd = usrCmd .. " " .. table.concat(masterTbl.pargs)
+   local user = os.getenv("USER")
+   local jobid = os.getenv("PBS_JOBID") or ""
+   local cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
+   local arch = os.getenv("VSC_ARCH_LOCAL") or ""
+   local msg = string.format("user=%s, cluster=%s, arch=%s, jobid=%s, cmd=%s",
+                             user, cluster, arch, jobid, cmd)
+   os.execute("logger -t lmod -p user.notice -- " .. msg)
+
    local ld_library_path = os.getenv("ORIG_LD_LIBRARY_PATH") or ""
    if ld_library_path ~= "" then
        dbg.print{"Setting LD_LIBRARY_PATH to ", ld_library_path, "\n"}
