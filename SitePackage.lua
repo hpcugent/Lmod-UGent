@@ -43,8 +43,19 @@ local function load_hook(t)
 
    if (mode() ~= "load") then return end
 
+   local masterTbl = masterTbl()
+   local userload = "no"
+
+   -- Not the most elegant way of doing it but
+   -- until better is found, it will do
+   for _, val in ipairs(masterTbl.pargs) do
+       if string.find(t.modFullName, val) then
+           userload = "yes"
+       end
+   end
+
    local logTbl = {}
-   logTbl[#logTbl+1]= {"userload", "no"}  -- FIXME: should be yes on user requested load of the module (not loaded as a dep)
+   logTbl[#logTbl+1]= {"userload", userload}
    logTbl[#logTbl+1]= {"module", t.modFullName}
    logTbl[#logTbl+1]= {"fn", t.fn}
 
