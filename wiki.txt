@@ -1,0 +1,252 @@
+== Setting up the environment using modules ==
+
+To set up your environment for using a particular (set of) software package(s), you can use the modules that are provided centrally.
+
+=== Module commands: using '<code>ml</code>' or '<code>module</code>' ===
+
+Interacting with the modules is done via the modules tool (currently Lmod [1]), via the <code>module</code> command or the handy shortcut <code>ml</code>, see below.
+
+==== Available modules: <code>ml av</code> (<code>module avail</code>) ====
+
+To get an overview of all available modules, you can use <code>module avail</code> or simply <code>ml av</code>:
+
+<pre>
+$ ml av
+
+----------------------------- /apps/gent/CO7/haswell-ib/modules/all -----------------------------
+   ABAQUS/6.12.1-linux-x86_64           libXext/1.3.3-intel-2016a                  (D)
+   ABAQUS/6.14.1-linux-x86_64    (D)    libXfixes/5.0.1-gimkl-2.11.5
+   ADF/2014.02                          libXfixes/5.0.1-intel-2015a
+   ...                                  ...
+</pre>
+
+In the current module naming scheme, each module name consists of two parts:
+
+* the part before the first <code>/</code>, corresponding to the ''software name''; and
+* the remainder, corresponding to the software ''version'', the ''compiler toolchain'' that was used to install the software, and a possible ''version suffix''
+
+For example, the module name '<code>matplotlib/1.5.1-intel-2016a-Python-2.7.11</code>' will set up the environment for using ''matplotlib'' version ''1.5.1'',
+which was installed using the 'intel/2016a</code>' compiler toolchain; the version suffix '<code>-Python-2.7.11</code>' indicates it was installed for Python version 2.7.11.
+
+The <code>(D)</code> indicates that this particular version of the module is the default, but we strongly recommend to ''not'' rely on this. 
+
+===== Available modules for a particular software package: <code>ml av <name></code> (<code>module avail <name></code>) =====
+
+To check which modules are available for a particular software package, you can provide the software name to <code>ml av</code>.
+
+For example, to check which versions of IPython are available:
+
+<pre>
+$ ml av ipython
+----------------------------- /apps/gent/CO7/haswell-ib/modules/all -----------------------------
+IPython/3.2.3-intel-2015b-Python-2.7.10    IPython/3.2.3-intel-2016a-Python-2.7.11 (D)
+</pre>
+
+Note that the specified software name is treated case-insensitively.
+
+Lmod does a ''partial'' match on the module name, so sometimes you need to use '<code>/</code>' to indicate the end of the software name you are interested in:
+
+<pre>
+$ ml av GCC/
+----------------------------- /apps/gent/CO7/haswell-ib/modules/all -----------------------------
+GCC/4.9.2    GCC/4.9.3-binutils-2.25    GCC/4.9.3    GCC/4.9.3-2.25    GCC/5.3.0    GCC/6.1.0-2.25 (D)
+</pre>
+
+
+==== Inspecting a module using <code>ml show</code> (<code>module show</code>) ====
+
+To see how a module would change the environment, use '<code>module show</code>' or '<code>ml show</code>':
+
+<pre>
+$ ml show matplotlib/1.5.1-intel-2016a-Python-2.7.11
+----------------------------- /apps/gent/CO7/haswell-ib/modules/all -----------------------------
+whatis("Description: matplotlib is a python 2D plotting library which produces publication quality figures in a variety of 
+hardcopy formats and interactive environments across platforms. matplotlib can be used in python scripts, the python 
+and ipython shell, web application servers, and six graphical user interface toolkits. - Homepage: http://matplotlib.org ")
+conflict("matplotlib")
+load("intel/2016a")
+load("Python/2.7.11-intel-2016a")
+load("freetype/2.6.2-intel-2016a")
+load("libpng/1.6.21-intel-2016a")
+prepend_path("LD_LIBRARY_PATH","/apps/gent/CO7/haswell-ib/software/matplotlib/1.5.1-intel-2016a-Python-2.7.11/lib")
+prepend_path("LIBRARY_PATH","/apps/gent/CO7/haswell-ib/software/matplotlib/1.5.1-intel-2016a-Python-2.7.11/lib")
+setenv("EBROOTMATPLOTLIB","/apps/gent/CO7/haswell-ib/software/matplotlib/1.5.1-intel-2016a-Python-2.7.11")
+setenv("EBVERSIONMATPLOTLIB","1.5.1")
+setenv("EBDEVELMATPLOTLIB","/apps/gent/CO7/haswell-ib/software/matplotlib/1.5.1-intel-2016a-Python-2.7.11/easybuild/matplotlib-1.5.1-intel-2016a-Python-2.7.11-easybuild-devel")
+prepend_path("PYTHONPATH","/apps/gent/CO7/haswell-ib/software/matplotlib/1.5.1-intel-2016a-Python-2.7.11/lib/python2.7/site-packages")
+setenv("EBEXTSLISTMATPLOTLIB","Cycler-0.9.0,matplotlib-1.5.1")
+help([[ matplotlib is a python 2D plotting library which produces publication quality figures in a variety of
+ hardcopy formats and interactive environments across platforms. matplotlib can be used in python scripts, the python
+ and ipython shell, web application servers, and six graphical user interface toolkits. - Homepage: http://matplotlib.org
+</pre>
+
+Note that both the direct changes to the environment as well as other modules that will be loaded are shown.
+
+If you're not sure what all of this means: don't worry, you don't have to know.
+
+==== List of loaded modules: <code>ml</code> (<code>module list</code>) ====
+
+To get an overview of the currently loaded modules, use '<code>module list</code>' or '<code>ml</code>' (without specifying extra arguments).
+
+In a default environment, you should see a single '<code>cluster</code>' module loaded:
+
+<pre>
+$ ml
+
+Currently Loaded Modules:
+  1) cluster/delcatty (S)
+
+  Where:
+   S:  Module is Sticky, requires --force to unload or purge
+</pre>
+
+(for more details on 'sticky' modules, see the section on '<code>ml purge</code>')
+
+==== Loading modules: <code>ml <modname(s)></code> (<code>module load <modname(s)></code>) ====
+
+The effectively apply the changes to the environment that are specified by a module, use '<code>module load</code>' or '<code>ml</code>' and specify the name of the module.
+
+For example, to set up your environment to use matplotlib:
+
+<pre>
+$ ml matplotlib/1.5.1-intel-2016a-Python-2.7.11
+$
+$ ml
+
+Currently Loaded Modules:
+  1) cluster/delcatty                                    (S)  12) zlib/1.2.8-intel-2016a
+  2) GCCcore/4.9.3                                          13) libreadline/6.3-intel-2016a
+  3) binutils/2.25-GCCcore-4.9.3                            14) ncurses/6.0-intel-2016a
+  4) icc/2016.1.150-GCC-4.9.3-2.25                          15) Tcl/8.6.4-intel-2016a
+  5) ifort/2016.1.150-GCC-4.9.3-2.25                        16) SQLite/3.9.2-intel-2016a
+  6) iccifort/2016.1.150-GCC-4.9.3-2.25                     17) Tk/8.6.4-intel-2016a-no-X11
+  7) impi/5.1.2.150-iccifort-2016.1.150-GCC-4.9.3-2.25      18) GMP/6.1.0-intel-2016a
+  8) iimpi/8.1.5-GCC-4.9.3-2.25                             19) Python/2.7.11-intel-2016a
+  9) imkl/11.3.1.150-iimpi-8.1.5-GCC-4.9.3-2.25             20) freetype/2.6.2-intel-2016a
+ 10) intel/2016a                                            21) libpng/1.6.21-intel-2016a
+ 11) bzip2/1.0.6-intel-2016a                                22) matplotlib/1.5.1-intel-2016a-Python-2.7.11
+
+</pre>
+
+Note that even though we only loaded a single module, the output of '<code>ml</code>' shows that a whole bunch of modules were loaded, which are required dependencies for ''matplotlib'',
+including both the ''compiler toolchain'' that was used to install ''matplotlib'' (i.e. '<code>intel/2016a</code>', and it's dependencies) and the module providing the ''Python'' installation
+for which ''matplotlib'' was installed (i.e. '<code>Python/2.7.11-intel-2016a</code>').
+
+===== Conflicting modules =====
+
+It is important to note that '''only modules that are compatible with each other can be loaded together. In particular, modules must be installed either with the same toolchain as the modules that
+are already loaded, or with a compatible (sub)toolchain.'''
+
+For example, once you have loaded one or more modules that were installed with the '<code>intel/2016a</code>' toolchain, all other modules that you load should have been installed with the same toolchain.
+
+In addition, only '''one single version''' of each software package can be loaded at a particular time. For example, once you have the '<code>Python/2.7.11-intel-2016a</code>' module loaded,
+you can not load a different version of Python in the same session/job script; neither directly, nor indirectly as a dependency of another module you want to load.
+
+If you do try to load conflicting modules, you will run into an error like:
+
+<pre>
+$ ml Python/2.7.11-intel-2016a
+$ ml Python/3.5.1-intel-2016a 
+Lmod has detected the following error:  Your site prevents the automatic swapping of modules with same name.
+You must explicitly unload the loaded version of "Python" before you can load the new one. Use swap (or an unload
+followed by a load) to do this:
+
+   $ module swap Python  Python/3.5.1-intel-2016a
+
+Alternatively, you can set the environment variable LMOD_DISABLE_SAME_NAME_AUTOSWAP to "no" to re-enable same name
+</pre>
+
+==== Unloading modules: <code>ml unload <modname(s)></code> or <code>ml -<modname(s)></code> (<code>module unload <modname(s)></code>) ====
+
+To revert the changes to the environment that were made by a particular module, you can use '<code>module unload</code>' or '<code>ml -<modname></code>'.
+
+For example:
+
+<pre>
+$ ml
+
+Currently Loaded Modules:
+  1) cluster/golett (S)
+
+$ which gcc
+/usr/bin/gcc
+
+$ ml GCC/4.9.3
+$ ml
+
+Currently Loaded Modules:
+  1) cluster/golett (S)   2) GCC/4.9.3
+
+$ which gcc
+/apps/gent/CO7/haswell-ib/software/GCC/4.9.3/bin/gcc
+
+$ ml -GCC/4.9.3
+$ ml
+
+Currently Loaded Modules:
+  1) cluster/golett (S)
+
+$ which gcc
+/usr/bin/gcc
+
+</pre>
+
+==== Resetting by unloading all modules: <code>ml purge</code> (<code>module purge</code>) ====
+
+To reset your environment back to a clean state, you can use '<code>module purge</code>' or '<code>ml purge</code>':
+
+<pre>
+$ ml
+
+Currently Loaded Modules:
+  1) cluster/delcatty                                    (S)  11) bzip2/1.0.6-intel-2016a
+  2) GCCcore/4.9.3                                          12) zlib/1.2.8-intel-2016a
+  3) binutils/2.25-GCCcore-4.9.3                            13) libreadline/6.3-intel-2016a
+  4) icc/2016.1.150-GCC-4.9.3-2.25                          14) ncurses/6.0-intel-2016a
+  5) ifort/2016.1.150-GCC-4.9.3-2.25                        15) Tcl/8.6.4-intel-2016a
+  6) iccifort/2016.1.150-GCC-4.9.3-2.25                     16) SQLite/3.9.2-intel-2016a
+  7) impi/5.1.2.150-iccifort-2016.1.150-GCC-4.9.3-2.25      17) Tk/8.6.4-intel-2016a-no-X11
+  8) iimpi/8.1.5-GCC-4.9.3-2.25                             18) GMP/6.1.0-intel-2016a
+  9) imkl/11.3.1.150-iimpi-8.1.5-GCC-4.9.3-2.25             19) Python/2.7.11-intel-2016a
+ 10) intel/2016a
+
+$ ml purge
+
+The following modules were not unloaded:
+   (Use "module --force purge" to unload all):
+
+  1) cluster/delcatty
+
+[15:21:20] vsc40023@node2626:~ $ ml
+
+Currently Loaded Modules:
+  1) cluster/delcatty (S)
+</pre>
+
+Note that the '<code>cluster</code>' will always remain loaded, since it defines some important environment variables that point to the location of centrally installed software/modules,
+and others that are required for submitting jobs and interfacing with the cluster resource manager (<code>qsub</code>, <code>qstat</code>, ...).
+
+As such, you should '''not''' (re)load the <code>cluster</code> module anymore after running <code>ml purge</code>.
+
+=== Differences between Lmod and Tcl-based environment modules ===
+
+In June 2016, we (finally) switched from the Tcl/C implementation of environment modules [4] to Lmod [1, 2, 3], for a number of reasons:
+
+* Lmod is a modern alternative to the oudated & no longer actively maintained environment modules tool
+* Lmod is, for the most part, a drop-in replacement for the Tcl-based environment modules tool
+* Lmod is significantly faster (thanks to using a module cache), is actively maintained, and provides several advanced features
+
+==== Key differences with environment modules ====
+
+* more responsive module commands, in particular <code>module avail</code>/<code>ml av</code>
+* an easier to use interface (e.g. <code>ml</code>)
+* module conflicts are *strictly* enforced; conflicting modules can no longer be loaded together
+* 'ml purge' does not unload the <code>cluster</code> module
+* module files can be written in either Tcl or Lua syntax, so existing module files written in Tcl can be used as-is
+
+
+* [1] https://www.tacc.utexas.edu/research-development/tacc-projects/lmod
+* [2] http://lmod.readthedocs.io
+* [3] https://github.com/TACC/Lmod
+* [4] http://modules.sourceforge.net
+
