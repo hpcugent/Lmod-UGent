@@ -101,6 +101,19 @@ local function startup_hook(usrCmd)
    dbg.fini()
 end
 
+
+local function msg_hook(mode, output)
+    -- mode is avail, list, ...
+    -- output is a table with the current output
+
+   if mode == "avail" then
+       output[#output+1] = "\nIf you need software that is not listed, request it at hpc@ugent.be\n"
+   end
+
+   return output
+end
+
 hook.register("load", load_hook)
 hook.register("restore", restore_hook)
 hook.register("startup", startup_hook)
+hook.register("msgHook", msg_hook)
