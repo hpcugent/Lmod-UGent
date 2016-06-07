@@ -12,6 +12,28 @@ local hook  = require("Hook")
 local posix = require("posix")
 
 
+local function logmsg(logTbl)
+    -- Print to syslog with generic header
+    -- All the elements in the table logTbl are
+    -- added in order. Expect format:
+    -- logTbl[#logTbl+1] = {'log_key', 'log_value'}
+
+    local user = os.getenv("USER")
+    local jobid = os.getenv("PBS_JOBID") or ""
+    local cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
+    local arch = os.getenv("VSC_ARCH_LOCAL") or ""
+
+    local msg = string.format("username=%s, cluster=%s, arch=%s, jobid=%s",
+                              user, cluster, arch, jobid)
+
+    for _, val in ipairs(logTbl) do
+        msg = msg .. string.format(", %s=%s", val[1], val[2] or "")
+    end
+
+    os.execute("logger -t lmod -p user.notice -- " .. msg)
+end
+
+
 -- By using the hook.register function, this function "load_hook" is called
 -- ever time a module is loaded with the file name and the module name.
 local function load_hook(t)
