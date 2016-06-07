@@ -42,15 +42,16 @@ local function load_hook(t)
    --     t.fn:           the file name: (i.e /apps/modulefiles/Core/gcc/4.7.2.lua)
 
    if (mode() ~= "load") then return end
-   local user = os.getenv("USER")
-   local jobid = os.getenv("PBS_JOBID") or ""
-   local cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
-   local arch = os.getenv("VSC_ARCH_LOCAL") or ""
-   local userload = "no"  -- FIXME: should be yes on user requested load of the module (not loaded as a dep)
-   local msg = string.format("user=%s, cluster=%s, arch=%s, module=%s, fn=%s, userload=%s, jobid=%s",
-                             user, cluster, arch, t.modFullName, t.fn, userload, jobid)
-   os.execute("logger -t lmod -p user.notice -- " .. msg)
+
+   local logTbl = {}
+   logTbl[#logTbl+1]= {"userload", "no"}  -- FIXME: should be yes on user requested load of the module (not loaded as a dep)
+   logTbl[#logTbl+1]= {"module", t.modFullName}
+   logTbl[#logTbl+1]= {"fn", t.fn}
+
+   logmsg(logTbl)
+
 end
+
 
 -- This hook is called after a restore operation
 local function restore_hook(t)
@@ -74,6 +75,7 @@ local function restore_hook(t)
    dbg.fini()
 end
 
+
 -- This hook is called right after starting Lmod
 local function startup_hook(usrCmd)
     -- usrCmd holds the currect active command
@@ -84,14 +86,11 @@ local function startup_hook(usrCmd)
 
    dbg.print{"Received usrCmd: ", usrCmd, "\n"}
 
-   local cmd = (usrCmd or "") .. " " .. table.concat(masterTbl.pargs)
-   local user = os.getenv("USER")
-   local jobid = os.getenv("PBS_JOBID") or ""
-   local cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
-   local arch = os.getenv("VSC_ARCH_LOCAL") or ""
-   local msg = string.format("user=%s, cluster=%s, arch=%s, jobid=%s, cmd=%s",
-                             user, cluster, arch, jobid, cmd)
-   os.execute("logger -t lmod -p user.notice -- " .. msg)
+   local logTbl = {}
+   logTbl[#logTbl+1]= {"cmd", usrCmd}
+   logTbl[#logTbl+1]= {"args", table.concat(masterTbl.pargs, " ")}
+
+   logmsg(logTbl)
 
    local ld_library_path = os.getenv("ORIG_LD_LIBRARY_PATH") or ""
    if ld_library_path ~= "" then
