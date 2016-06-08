@@ -1,12 +1,35 @@
-== Setting up the environment using modules ==
+= Setting up the environment using modules =
 
 To set up your environment for using a particular (set of) software package(s), you can use the modules that are provided centrally.
 
-=== Module commands: using '<code>ml</code>' or '<code>module</code>' ===
+== Module commands: using '<code>ml</code>' (or '<code>module</code>') ==
 
-Interacting with the modules is done via the modules tool (currently Lmod [1]), via the <code>module</code> command or the handy shortcut <code>ml</code>, see below.
+Interacting with the modules is done via the modules tool (currently Lmod [1]), using the '<code>module</code>' command
+or the handy shortcut command '<code>ml</code>', see below.
 
-==== Available modules: <code>ml av</code> (<code>module avail</code>) ====
+----
+
+=== List of loaded modules: '<code>module list</code>' (or '<code>ml</code>') ===
+
+To get an overview of the currently loaded modules, use '<code>module list</code>' or '<code>ml</code>' (without specifying extra arguments).
+
+In a default environment, you should see a single '<code>cluster</code>' module loaded:
+
+<pre>
+$ ml
+
+Currently Loaded Modules:
+  1) cluster/delcatty (S)
+
+  Where:
+   S:  Module is Sticky, requires --force to unload or purge
+</pre>
+
+(for more details on 'sticky' modules, see the section on '<code>ml purge</code>')
+
+----
+
+=== Searching for available modules: '<code>module avail</code>' (or '<code>ml av</code>') and '<code>ml spider</code>' ===
 
 To get an overview of all available modules, you can use <code>module avail</code> or simply <code>ml av</code>:
 
@@ -28,9 +51,91 @@ In the current module naming scheme, each module name consists of two parts:
 For example, the module name '<code>matplotlib/1.5.1-intel-2016a-Python-2.7.11</code>' will set up the environment for using ''matplotlib'' version ''1.5.1'',
 which was installed using the 'intel/2016a</code>' compiler toolchain; the version suffix '<code>-Python-2.7.11</code>' indicates it was installed for Python version 2.7.11.
 
-The <code>(D)</code> indicates that this particular version of the module is the default, but we strongly recommend to ''not'' rely on this. 
+The <code>(D)</code> indicates that this particular version of the module is the default,
+but we strongly recommend to ''not'' rely on this as the default can change at any point.
+Usuall, the default will point to the latest version available.
 
-===== Available modules for a particular software package: <code>ml av <name></code> (<code>module avail <name></code>) =====
+----
+
+==== Searching for modules: '<code>ml spider</code>' ====
+
+The (Lmod-specific) '<code>spider</code>' subcommand lets you search for modules across all clusters.
+
+If you just provide a software name, for example '<code>gcc</code>', it prints on overview of all available modules
+for GCC.
+
+<pre>
+$ ml spider gcc
+
+---------------------------------------------------------------------------------
+  GCC:
+---------------------------------------------------------------------------------
+     Versions:
+        GCC/4.7.2
+        GCC/4.8.1
+        GCC/4.8.2
+        GCC/4.8.3
+        GCC/4.9.1
+        GCC/4.9.2
+        GCC/4.9.3-binutils-2.25
+        GCC/4.9.3
+        GCC/4.9.3-2.25
+        GCC/5.3.0
+
+     Other possible modules matches:
+        GCCcore
+
+---------------------------------------------------------------------------------
+  To find other possible module matches do:
+      module -r spider '.*GCC.*'
+
+---------------------------------------------------------------------------------
+  For detailed information about a specific "GCC" module (including how to load the modules) use the module's full name.
+  For example:
+
+     $ module spider GCC/4.9.3
+---------------------------------------------------------------------------------
+</pre>
+
+Note that '<code>spider</code>' is case-insensitive.
+
+If you use '<code>spider</code>' on a full module name like GCC/4.9.3-2.25 it will tell on which cluster(s) that module available:
+
+<pre>
+$ ml spider GCC/4.9.3-2.25
+
+---------------------------------------------------------------------------------
+  GCC: GCC/4.9.3-2.25
+---------------------------------------------------------------------------------
+
+     Other possible modules matches:
+        GCCcore
+
+    You will need to load all module(s) on any one of the lines below before the "GCC/4.9.3-2.25" module
+    is available to load.
+
+      cluster/delcatty
+      cluster/golett
+      cluster/phanpy
+      cluster/raichu
+      cluster/swalot
+ 
+    Help:
+       The GNU Compiler Collection includes front ends for C, C++, Objective-C, Fortran, Java, and Ada,
+       as well as libraries for these languages (libstdc++, libgcj,...). - Homepage: http://gcc.gnu.org/
+
+---------------------------------------------------------------------------------
+  To find other possible module matches do:
+      module -r spider '.*GCC/4.9.3-2.25.*'
+</pre>
+
+This tells you that the module named '<code>GCC/4.9.3-2.25</code>' is available on the clusters <code>delcatty</code>,
+<code>golett</code>, <code>phanpy</code>, <code>raichu</code> and <code>swalot</code>.
+It also tells you what the module contains and a URL to the homepage of the software.
+
+----
+
+==== Available modules for a particular software package: '<code>module avail <name></code>' (or '<code>ml av <name></code>') ====
 
 To check which modules are available for a particular software package, you can provide the software name to <code>ml av</code>.
 
@@ -53,7 +158,9 @@ GCC/4.9.2    GCC/4.9.3-binutils-2.25    GCC/4.9.3    GCC/4.9.3-2.25    GCC/5.3.0
 </pre>
 
 
-==== Inspecting a module using <code>ml show</code> (<code>module show</code>) ====
+----
+
+=== Inspecting a module using '<code>module show</code>' (or '<code>ml show</code>') ===
 
 To see how a module would change the environment, use '<code>module show</code>' or '<code>ml show</code>':
 
@@ -82,27 +189,12 @@ help([[ matplotlib is a python 2D plotting library which produces publication qu
 
 Note that both the direct changes to the environment as well as other modules that will be loaded are shown.
 
-If you're not sure what all of this means: don't worry, you don't have to know.
+If you're not sure what all of this means: don't worry, you don't have to know; just try loading the module as try
+using the software.
 
-==== List of loaded modules: <code>ml</code> (<code>module list</code>) ====
+----
 
-To get an overview of the currently loaded modules, use '<code>module list</code>' or '<code>ml</code>' (without specifying extra arguments).
-
-In a default environment, you should see a single '<code>cluster</code>' module loaded:
-
-<pre>
-$ ml
-
-Currently Loaded Modules:
-  1) cluster/delcatty (S)
-
-  Where:
-   S:  Module is Sticky, requires --force to unload or purge
-</pre>
-
-(for more details on 'sticky' modules, see the section on '<code>ml purge</code>')
-
-==== Loading modules: <code>ml <modname(s)></code> (<code>module load <modname(s)></code>) ====
+=== Loading modules: '<code>module <modname(s)></code>' (or '<code>ml <modname(s)></code>') ===
 
 The effectively apply the changes to the environment that are specified by a module, use '<code>module load</code>' or '<code>ml</code>' and specify the name of the module.
 
@@ -110,7 +202,7 @@ For example, to set up your environment to use matplotlib:
 
 <pre>
 $ ml matplotlib/1.5.1-intel-2016a-Python-2.7.11
-$
+
 $ ml
 
 Currently Loaded Modules:
@@ -132,7 +224,9 @@ Note that even though we only loaded a single module, the output of '<code>ml</c
 including both the ''compiler toolchain'' that was used to install ''matplotlib'' (i.e. '<code>intel/2016a</code>', and it's dependencies) and the module providing the ''Python'' installation
 for which ''matplotlib'' was installed (i.e. '<code>Python/2.7.11-intel-2016a</code>').
 
-===== Conflicting modules =====
+----
+
+==== Conflicting modules ====
 
 It is important to note that '''only modules that are compatible with each other can be loaded together. In particular, modules must be installed either with the same toolchain as the modules that
 are already loaded, or with a compatible (sub)toolchain.'''
@@ -142,21 +236,11 @@ For example, once you have loaded one or more modules that were installed with t
 In addition, only '''one single version''' of each software package can be loaded at a particular time. For example, once you have the '<code>Python/2.7.11-intel-2016a</code>' module loaded,
 you can not load a different version of Python in the same session/job script; neither directly, nor indirectly as a dependency of another module you want to load.
 
-If you do try to load conflicting modules, you will run into an error like:
+See '''http://hpc.ugent.be/userwiki/index.php/User:VscModulesLmod#Module_conflicts_are_.2Astrictly.2A_enforced''' for more information.
 
-<pre>
-$ ml Python/2.7.11-intel-2016a
-$ ml Python/3.5.1-intel-2016a 
-Lmod has detected the following error:  Your site prevents the automatic swapping of modules with same name.
-You must explicitly unload the loaded version of "Python" before you can load the new one. Use swap (or an unload
-followed by a load) to do this:
+----
 
-   $ module swap Python  Python/3.5.1-intel-2016a
-
-Alternatively, you can set the environment variable LMOD_DISABLE_SAME_NAME_AUTOSWAP to "no" to re-enable same name
-</pre>
-
-==== Unloading modules: <code>ml unload <modname(s)></code> or <code>ml -<modname(s)></code> (<code>module unload <modname(s)></code>) ====
+=== Unloading modules: '<code>module unload <modname(s)></code>' (or '<code>ml unload <modname></code>', '<code>ml -<modname(s)></code>') ===
 
 To revert the changes to the environment that were made by a particular module, you can use '<code>module unload</code>' or '<code>ml -<modname></code>'.
 
@@ -191,7 +275,9 @@ $ which gcc
 
 </pre>
 
-==== Resetting by unloading all modules: <code>ml purge</code> (<code>module purge</code>) ====
+----
+
+=== Resetting by unloading all modules: <code>ml purge</code> (<code>module purge</code>) ===
 
 To reset your environment back to a clean state, you can use '<code>module purge</code>' or '<code>ml purge</code>':
 
@@ -228,25 +314,149 @@ and others that are required for submitting jobs and interfacing with the cluste
 
 As such, you should '''not''' (re)load the <code>cluster</code> module anymore after running <code>ml purge</code>.
 
-=== Differences between Lmod and Tcl-based environment modules ===
+----
 
-In June 2016, we (finally) switched from the Tcl/C implementation of environment modules [4] to Lmod [1, 2, 3], for a number of reasons:
+=== Module collections: '<code>ml save</code>', '<code>ml restore</code>' ===
 
-* Lmod is a modern alternative to the oudated & no longer actively maintained environment modules tool
-* Lmod is, for the most part, a drop-in replacement for the Tcl-based environment modules tool
-* Lmod is significantly faster (thanks to using a module cache), is actively maintained, and provides several advanced features
+If you have a set of modules that you need to load often, you can save these in a ''collection'' (only works with Lmod).
 
-==== Key differences with environment modules ====
+First, load all the modules you need, for example:
 
-* more responsive module commands, in particular <code>module avail</code>/<code>ml av</code>
-* an easier to use interface (e.g. <code>ml</code>)
-* module conflicts are *strictly* enforced; conflicting modules can no longer be loaded together
-* 'ml purge' does not unload the <code>cluster</code> module
-* module files can be written in either Tcl or Lua syntax, so existing module files written in Tcl can be used as-is
+<pre>
+ml HDF5/1.8.16-intel-2016a GSL/2.1-intel-2016a Python/2.7.11-intel-2016a
+</pre>
+
+Now store them in a collection using <code>ml save</code>:
+
+<pre>
+$ ml save my-collection
+</pre>
+
+Later, for example in a job script, you can reload all these modules with '<code>ml restore</code>':
+
+<pre>
+$ ml restore my-collection
+</pre>
+
+With '<code>ml savelist</code>' can you gets a list of all saved collections:
+
+<pre>
+$ ml savelist
+Named collection list:
+  1) my-collection
+  2) my-other-collection
+</pre>
+
+To inspect a collection, use '<code>ml describe</code>'.
 
 
-* [1] https://www.tacc.utexas.edu/research-development/tacc-projects/lmod
-* [2] http://lmod.readthedocs.io
-* [3] https://github.com/TACC/Lmod
-* [4] http://modules.sourceforge.net
+----
 
+== Lmod vs Tcl-based environment modules ==
+
+In June 2016, we switched to [https://www.tacc.utexas.edu/research-development/tacc-projects/lmod Lmod] as a modules tool,
+a modern alternative to the oudated & no longer actively maintained [http://modules.sourceforge.net Tcl-based environment modules tool].
+
+Detailed documentation on Lmod is available at [http://lmod.readthedocs.io http://lmod.readthedocs.io].
+
+----
+
+=== Benefits ===
+
+* significantly more responsive module commands, in particular <code>module avail</code>
+* a better and easier to use interface (e.g. case-insensitive <code>avail</code>, the <code>ml</code> command, etc.)
+* additional useful features, like defining & restoring module collections
+* drop-in replacement for Tcl-based environment modules (existing Tcl module files do not need to be modified to work)
+* module files can be written in either Tcl or Lua syntax (and both types of modules can be mixed together)
+
+----
+
+=== Key differences ===
+
+The switch to Lmod should be mostly transparent, i.e. '''''you should not have to change your existing job scripts'''''.
+
+Existing '<code>module</code>' commands should keep working as they were before the switch to Lmod.
+
+However, there are a couple of minor differences between Lmod & the old modules tool you should be aware of:
+
+* module conflicts are ''strictly'' enforced
+* <code>module purge</code>' does not unload the '<code>cluster</code>' module
+* '<code>modulecmd</code>' is not available anymore (only relevant for EasyBuild)
+
+
+See below for more detailed information.
+
+----
+
+==== Module conflicts are ''strictly'' enforced ====
+
+''Conflicting modules can no longer be loaded together''.
+
+Lmod has been configured to report an error if any module conflict occurs
+(as opposed to the default behaviour which is to unload the conflicting module and replace it with the one being loaded).
+
+Although it seemed like the old modules did allow for conflicting modules to be loaded together, this was highly
+discouraged already since it usually resulted in a broken environment. Lmod will ensure no changes are made to your
+existing environment if a module that conflicts with an already module is loaded.
+
+If you do try to load conflicting modules, you will run into an error message like:
+
+<pre>
+$ module load Python/2.7.11-intel-2016a
+$ module load Python/3.5.1-intel-2016a 
+Lmod has detected the following error:  Your site prevents the automatic swapping of modules with same name.
+You must explicitly unload the loaded version of "Python" before you can load the new one. Use swap (or an unload
+followed by a load) to do this:
+
+   $ module swap Python  Python/3.5.1-intel-2016a
+
+Alternatively, you can set the environment variable LMOD_DISABLE_SAME_NAME_AUTOSWAP to "no" to re-enable same name
+</pre>
+
+Note that although Lmod suggests to unload or swap, we recommend to try and make sure you ''only load compatible
+modules together'', and certainly '''not''' to define <code>$LMOD_DISABLE_SAME_NAME_AUTOSWAP</code>.
+
+See also http://hpc.ugent.be/userwiki/index.php?title=User:VscModulesLmod#Conflicting_modules .
+
+----
+
+==== '<code>module purge</code>' does not unload the '<code>cluster</code>' module ====
+
+Using '<code>module purge</code>' effectively resets your environment to a pristine ''working'' state, i.e. the
+'<code>cluster</code>' module ''stays loaded'' after the '<code>purge</code>'.
+
+As such, it is no longer required to run '<code>module load cluster</code>' to restore your environment to a working state.
+
+----
+
+==== '<code>modulecmd</code>' is not available anymore ====
+
+The '<code>modulecmd</code>' command is not available anymore, and has been replacd by the '<code>lmod</code>' command.
+
+This is only relevant for EasyBuild, which has be to configured to use Lmod as a modules tool, since by default
+it expects that '<code>modulecmd</code>' is readily available:
+
+<pre>
+export EASYBUILD_MODULES_TOOL=Lmod
+</pre>
+
+You should not be using '<code>lmod</code>' directly in other circumstances, use either '<code>ml</code>' or '<code>module</code>' instead.
+
+----
+
+=== '<code>ml</code>' shorthand ===
+
+Next to the '<code>modlue</code>' command (which is easy to mistype),
+Lmod provides a useful shorthand command '<code>ml</code>':
+
+* '<code>ml</code>' is equivalent with '<code>module list</code>'
+* '<code>ml GCC</code>' is equivalent with '<code>module load GCC</code>'
+* '<code>ml -GCC</code>' is equivalent with '<code>module unload GCC</code>'
+* '<code>ml av GCC</code>' is equivalent with '<code>module avail GCC</code>'
+* '<code>ml show GCC</code>' is equivalent with '<code>module show GCC</code>'
+
+----
+
+== Questions or problems ==
+
+In case of questions or problems, please do not hesitate to contact the HPC-UGent support team via '''[mailto:hpc@ugent.be hpc@ugent.be]''' .
