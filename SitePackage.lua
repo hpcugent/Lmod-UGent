@@ -12,6 +12,27 @@ local hook  = require("Hook")
 local posix = require("posix")
 
 
+local function logmsg(logTbl)
+    -- Print to syslog with generic header
+    -- All the elements in the table logTbl are
+    -- added in order. Expect format:
+    -- logTbl[#logTbl+1] = {'log_key', 'log_value'}
+
+    local cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
+    local jobid = os.getenv("PBS_JOBID") or ""
+    local user = os.getenv("USER")
+
+    local msg = string.format("username=%s, cluster=%s, jobid=%s",
+                              user, cluster, jobid)
+
+    for _, val in ipairs(logTbl) do
+        msg = msg .. string.format(", %s=%s", val[1], val[2] or "")
+    end
+
+    os.execute("logger -t lmod -p user.notice -- " .. msg)
+end
+
+
 -- By using the hook.register function, this function "load_hook" is called
 -- ever time a module is loaded with the file name and the module name.
 local function load_hook(t)
@@ -20,15 +41,27 @@ local function load_hook(t)
    --     t.fn:           the file name: (i.e /apps/modulefiles/Core/gcc/4.7.2.lua)
 
    if (mode() ~= "load") then return end
-   local user = os.getenv("USER")
-   local jobid = os.getenv("PBS_JOBID") or ""
-   local cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
-   local arch = os.getenv("VSC_ARCH_LOCAL") or ""
-   local userload = "no"  -- FIXME: should be yes on user requested load of the module (not loaded as a dep)
-   local msg = string.format("user=%s, cluster=%s, arch=%s, module=%s, fn=%s, userload=%s, jobid=%s",
-                             user, cluster, arch, t.modFullName, t.fn, userload, jobid)
-   os.execute("logger -t lmod -p user.notice -- " .. msg)
+
+   local masterTbl = masterTbl()
+   local userload = "no"
+
+   -- Not the most elegant way of doing it but
+   -- until better is found, it will do
+   for _, val in ipairs(masterTbl.pargs) do
+       if string.find(t.modFullName, val) then
+           userload = "yes"
+       end
+   end
+
+   local logTbl = {}
+   logTbl[#logTbl+1]= {"userload", userload}
+   logTbl[#logTbl+1]= {"module", t.modFullName}
+   logTbl[#logTbl+1]= {"fn", t.fn}
+
+   logmsg(logTbl)
+
 end
+
 
 -- This hook is called after a restore operation
 local function restore_hook(t)
@@ -52,6 +85,7 @@ local function restore_hook(t)
    dbg.fini()
 end
 
+
 -- This hook is called right after starting Lmod
 local function startup_hook(usrCmd)
     -- usrCmd holds the currect active command
@@ -62,14 +96,11 @@ local function startup_hook(usrCmd)
 
    dbg.print{"Received usrCmd: ", usrCmd, "\n"}
 
-   local cmd = (usrCmd or "") .. " " .. table.concat(masterTbl.pargs)
-   local user = os.getenv("USER")
-   local jobid = os.getenv("PBS_JOBID") or ""
-   local cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
-   local arch = os.getenv("VSC_ARCH_LOCAL") or ""
-   local msg = string.format("user=%s, cluster=%s, arch=%s, jobid=%s, cmd=%s",
-                             user, cluster, arch, jobid, cmd)
-   os.execute("logger -t lmod -p user.notice -- " .. msg)
+   local logTbl = {}
+   logTbl[#logTbl+1]= {"cmd", usrCmd}
+   logTbl[#logTbl+1]= {"args", table.concat(masterTbl.pargs, " ")}
+
+   logmsg(logTbl)
 
    local ld_library_path = os.getenv("ORIG_LD_LIBRARY_PATH") or ""
    if ld_library_path ~= "" then
@@ -80,6 +111,19 @@ local function startup_hook(usrCmd)
    dbg.fini()
 end
 
+
+local function msg_hook(mode, output)
+    -- mode is avail, list, ...
+    -- output is a table with the current output
+
+   if mode == "avail" then
+       output[#output+1] = "\nIf you need software that is not listed, request it at hpc@ugent.be\n"
+   end
+
+   return output
+end
+
 hook.register("load", load_hook)
 hook.register("restore", restore_hook)
 hook.register("startup", startup_hook)
+hook.register("msgHook", msg_hook)
