@@ -18,12 +18,11 @@ local function logmsg(logTbl)
     -- added in order. Expect format:
     -- logTbl[#logTbl+1] = {'log_key', 'log_value'}
 
-    local user = os.getenv("USER")
-    local jobid = os.getenv("PBS_JOBID") or ""
     local cluster = os.getenv("VSC_INSTITUTE_CLUSTER") or ""
-    local arch = os.getenv("VSC_ARCH_LOCAL") or ""
+    local jobid = os.getenv("PBS_JOBID") or ""
+    local user = os.getenv("USER")
 
-    local msg = string.format("username=%s, cluster=%s, arch=%s, jobid=%s",
+    local msg = string.format("username=%s, cluster=%s, jobid=%s",
                               user, cluster, arch, jobid)
 
     for _, val in ipairs(logTbl) do
