@@ -23,7 +23,7 @@ local function logmsg(logTbl)
     local user = os.getenv("USER")
 
     local msg = string.format("username=%s, cluster=%s, jobid=%s",
-                              user, cluster, arch, jobid)
+                              user, cluster, jobid)
 
     for _, val in ipairs(logTbl) do
         msg = msg .. string.format(", %s=%s", val[1], val[2] or "")
