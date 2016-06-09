@@ -104,7 +104,7 @@ local function startup_hook(usrCmd)
    logmsg(logTbl)
 
    if usrCmd == "load" and (fullargs == "cluster" or fullargs == "cluster/")
-      and os.getenv("VSC_INSTITUTE_CLUSTER") then
+      and string.find(os.getenv("LOADEDMODULES") or "", "cluster/") then
        dbg.print{"Loading default cluster module when it's already loaded. Bailing out!"}
        os.exit(0)
    end
