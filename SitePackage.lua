@@ -96,11 +96,21 @@ local function startup_hook(usrCmd)
 
    dbg.print{"Received usrCmd: ", usrCmd, "\n"}
 
+   local fullargs = table.concat(masterTbl.pargs, " ") or ""
    local logTbl = {}
    logTbl[#logTbl+1]= {"cmd", usrCmd}
-   logTbl[#logTbl+1]= {"args", table.concat(masterTbl.pargs, " ")}
+   logTbl[#logTbl+1]= {"args", fullargs}
 
    logmsg(logTbl)
+
+   if usrCmd == "load" and (fullargs == "cluster" or fullargs == "cluster/")
+      and os.getenv("VSC_INSTITUTE_CLUSTER") then
+       dbg.print{"Loading default cluster module when it's already loaded. Bailing out!"}
+       LmodWarning([['module load cluster' has no effect when a 'cluster' module is already loaded.
+For more information, please see https://www.vscentrum.be/cluster-doc/software/modules/lmod#module_load_cluster]])
+       os.exit(0)
+   end
+
 
    local ld_library_path = os.getenv("ORIG_LD_LIBRARY_PATH") or ""
    if ld_library_path ~= "" then
