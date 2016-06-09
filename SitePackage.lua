@@ -104,8 +104,10 @@ local function startup_hook(usrCmd)
    logmsg(logTbl)
 
    if usrCmd == "load" and (fullargs == "cluster" or fullargs == "cluster/")
-      and string.find(os.getenv("LOADEDMODULES") or "", "cluster/") then
+      and os.getenv("VSC_INSTITUTE_CLUSTER") then
        dbg.print{"Loading default cluster module when it's already loaded. Bailing out!"}
+       LmodWarning([['module load cluster' has no effect when a 'cluster' module is already loaded.
+For more information, please see https://www.vscentrum.be/cluster-doc/software/modules/lmod#module_load_cluster]])
        os.exit(0)
    end
 
