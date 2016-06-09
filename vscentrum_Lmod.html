@@ -427,11 +427,16 @@ fi
 <p>The <code>modulecmd</code> command is not available anymore, and has been replacd by the <code>lmod</code> command.
 </p>
 <p>This is only relevant for EasyBuild, which has be to configured to use Lmod as a modules tool, since by default
-it expects that 
-    <code>modulecmd</code> is readily available:
-</p>
+it expects that <code>modulecmd</code> is readily available.
+
+<br>For example:</p>
+
 <pre>export EASYBUILD_MODULES_TOOL=Lmod
 </pre>
+
+<p>See <a href="http://easybuild.readthedocs.io/en/latest/Configuration.html#supported-configuration-types">the EasyBuild
+documentation</a> for other ways of configuring EasyBuild to use Lmod.</p>
+
 <p>You should not be using <code>lmod</code> directly in other circumstances, use either <code>ml</code> or <code>module</code> instead.
 </p>
 <hr>
