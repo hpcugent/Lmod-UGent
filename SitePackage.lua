@@ -48,7 +48,8 @@ local function load_hook(t)
    -- Not the most elegant way of doing it but
    -- until better is found, it will do
    for _, val in ipairs(masterTbl.pargs) do
-       if string.find(t.modFullName, val) then
+       -- plain text search (no patterns)
+       if string.find(t.modFullName, val, 1, true) then
            userload = "yes"
        end
    end
