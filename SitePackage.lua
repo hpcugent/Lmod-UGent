@@ -136,7 +136,7 @@ end
 
 
 local function site_name_hook()
-   return "HPC-UGent"
+   return "HPCUGENT"
 end
 
 
