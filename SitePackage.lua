@@ -134,7 +134,14 @@ local function msg_hook(mode, output)
    return output
 end
 
+
+local function site_name_hook()
+   return "HPC-UGent"
+end
+
+
 hook.register("load", load_hook)
 hook.register("restore", restore_hook)
 hook.register("startup", startup_hook)
 hook.register("msgHook", msg_hook)
+hook.register("SiteName", site_name_hook)
