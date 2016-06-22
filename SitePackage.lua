@@ -127,9 +127,17 @@ local function msg_hook(mode, output)
     -- mode is avail, list, ...
     -- output is a table with the current output
 
+   dbg.start{"msg_hook"}
+
+   dbg.print{"Mode is ", mode, "\n"}
+
    if mode == "avail" then
        output[#output+1] = "\nIf you need software that is not listed, request it at hpc@ugent.be\n"
+   elseif mode == "lmoderror" or mode == "lmodwarning" then
+       output[#output+1] = "\nIf you don't understand the warning or error, contact the helpdesk at hpc@ugent.be\n"
    end
+
+   dbg.fini()
 
    return output
 end
