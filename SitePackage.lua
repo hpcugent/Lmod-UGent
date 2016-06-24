@@ -113,16 +113,14 @@ For more information, please see https://www.vscentrum.be/cluster-doc/software/m
    end
 
 
-   local ld_library_path = os.getenv("ORIG_LD_LIBRARY_PATH") or ""
-   if ld_library_path ~= "" then
-       dbg.print{"Setting LD_LIBRARY_PATH to ", ld_library_path, "\n"}
-       posix.setenv("LD_LIBRARY_PATH", ld_library_path)
-   end
+   local env_vars = {"LD_LIBRARY_PATH", "LD_PRELOAD"}
 
-   local ld_preload_path = os.getenv("ORIG_LD_PRELOAD") or ""
-   if ld_preload_path ~= "" then
-       dbg.print{"Setting LD_PRELOAD to ", ld_preload_path, "\n"}
-       posix.setenv("LD_PRELOAD", ld_preload_path)
+   for _, var in ipairs(env_vars) do
+       local orig_val = os.getenv("ORIG_" .. var) or ""
+       if orig_val ~= "" then
+           dbg.print{"Setting ", var, " to ", orig_val, "\n"}
+           posix.setenv(var, orig_val)
+       end
    end
 
    dbg.fini()
