@@ -104,7 +104,6 @@ For more information, please see https://www.vscentrum.be/cluster-doc/software/m
        os.exit(0)
    end
 
-
    local env_vars = {"LD_LIBRARY_PATH", "LD_PRELOAD"}
 
    for _, var in ipairs(env_vars) do
@@ -140,6 +139,7 @@ end
 
 
 local function site_name_hook()
+   -- set the SiteName
    return "HPCUGENT"
 end
 
