@@ -10,6 +10,7 @@ local Dbg   = require("Dbg")
 local dbg   = Dbg:dbg()
 local hook  = require("Hook")
 local posix = require("posix")
+local ModuleStack  = require("ModuleStack")
 
 
 local function logmsg(logTbl)
@@ -42,17 +43,8 @@ local function load_hook(t)
 
    if (mode() ~= "load") then return end
 
-   local masterTbl = masterTbl()
-   local userload = "no"
-
-   -- Not the most elegant way of doing it but
-   -- until better is found, it will do
-   for _, val in ipairs(masterTbl.pargs) do
-       -- plain text search (no patterns)
-       if string.find(t.modFullName, val, 1, true) then
-           userload = "yes"
-       end
-   end
+   local mStack   = ModuleStack:moduleStack()
+   local userload = (mStack:atTop()) and "yes" or "no"
 
    local logTbl = {}
    logTbl[#logTbl+1]= {"userload", userload}
