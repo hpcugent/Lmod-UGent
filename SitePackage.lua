@@ -144,8 +144,20 @@ local function site_name_hook()
 end
 
 
+local function packagebasename(t)
+   -- Use the EBROOT variables in the module
+   -- as base dir for the reverse map
+   dbg.start{"packagebasename_hook"}
+
+   t.patDir = "^EBROOT.*"
+
+   dbg.fini()
+end
+
+
 hook.register("load", load_hook)
 hook.register("restore", restore_hook)
 hook.register("startup", startup_hook)
 hook.register("msgHook", msg_hook)
 hook.register("SiteName", site_name_hook)
+hook.register("packagebasename", packagebasename)
