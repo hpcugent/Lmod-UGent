@@ -13,7 +13,7 @@ index bdee611..383ae35 100644
  module()
  {
 -  eval $($LMOD_CMD bash "$@")
-+  eval $(ORIG_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-} ORIG_LD_PRELOAD=${LD_PRELOAD:-} LD_PRELOAD="" LD_LIBRARY_PATH="" $LMOD_CMD bash "$@")
++  eval $(ORIG_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-} ORIG_LD_PRELOAD=${LD_PRELOAD:-} LD_LIBRARY_PATH="" LD_PRELOAD="" $LMOD_CMD bash "$@")
    [ $? = 0 ] && eval $(${LMOD_SETTARG_CMD:-:} -s sh)
  }
 
@@ -22,7 +22,7 @@ index bdee611..383ae35 100644
  ml()
  {
 -  eval $($LMOD_DIR/ml_cmd "$@")
-+  eval $(ORIG_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-} ORIG_LD_PRELOAD=${LD_PRELOAD:-} LD_PRELOAD="" LD_LIBRARY_PATH="" $LMOD_DIR/ml_cmd "$@")
++  eval $(ORIG_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-} ORIG_LD_PRELOAD=${LD_PRELOAD:-} LD_LIBRARY_PATH="" LD_PRELOAD="" $LMOD_DIR/ml_cmd "$@")
  }
 
  export_module=$(echo "@export_module@" | @tr@ '[:upper:]' '[:lower:]')
