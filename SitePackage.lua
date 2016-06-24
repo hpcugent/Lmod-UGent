@@ -119,6 +119,12 @@ For more information, please see https://www.vscentrum.be/cluster-doc/software/m
        posix.setenv("LD_LIBRARY_PATH", ld_library_path)
    end
 
+   local ld_preload_path = os.getenv("ORIG_LD_PRELOAD") or ""
+   if ld_preload_path ~= "" then
+       dbg.print{"Setting LD_PRELOAD to ", ld_preload_path, "\n"}
+       posix.setenv("LD_PRELOAD", ld_preload_path)
+   end
+
    dbg.fini()
 end
 
