@@ -1,27 +1,28 @@
-# This patch rename the LD_LIBRARY_PATH variable to ORIG_LD_LIBRARY_PATH 
+# This patch rename the LD_LIBRARY_PATH variable to ORIG_LD_LIBRARY_PATH
 # and clears it value. This ensurs that lua keeps on working, no matter
 # what is loaded. The startup hook will set the original value of LD_LIBRARY_PATH
 # back so that the correct value is given in the end.
+# Same for LD_PRELOAD.
 # ToDo: csh
 diff --git a/init/bash.in b/init/bash.in
 index bdee611..383ae35 100644
 --- a/init/bash.in
 +++ b/init/bash.in
 @@ -50,7 +50,7 @@ export MODULESHOME
- 
+
  module()
  {
 -  eval $($LMOD_CMD bash "$@")
-+  eval $(ORIG_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-} LD_LIBRARY_PATH="" $LMOD_CMD bash "$@")
++  eval $(ORIG_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-} ORIG_LD_PRELOAD=${LD_PRELOAD:-} LD_LIBRARY_PATH="" LD_PRELOAD="" $LMOD_CMD bash "$@")
    [ $? = 0 ] && eval $(${LMOD_SETTARG_CMD:-:} -s sh)
  }
- 
+
 @@ -76,7 +76,7 @@ fi
  unalias ml 2> /dev/null || true
  ml()
  {
 -  eval $($LMOD_DIR/ml_cmd "$@")
-+  eval $(ORIG_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-} LD_LIBRARY_PATH="" $LMOD_DIR/ml_cmd "$@")
++  eval $(ORIG_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-} ORIG_LD_PRELOAD=${LD_PRELOAD:-} LD_LIBRARY_PATH="" LD_PRELOAD="" $LMOD_DIR/ml_cmd "$@")
  }
- 
+
  export_module=$(echo "@export_module@" | @tr@ '[:upper:]' '[:lower:]')
