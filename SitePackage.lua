@@ -106,15 +106,15 @@ local function startup_hook(usrCmd)
         os.exit(0)
     end
 
-   local env_vars = {"LD_LIBRARY_PATH", "LD_PRELOAD"}
+    local env_vars = {"LD_LIBRARY_PATH", "LD_PRELOAD"}
 
-   for _, var in ipairs(env_vars) do
-       local orig_val = os.getenv("ORIG_" .. var) or ""
-       if orig_val ~= "" then
-           dbg.print{"Setting ", var, " to ", orig_val, "\n"}
-           posix.setenv(var, orig_val)
-       end
-   end
+    for _, var in ipairs(env_vars) do
+        local orig_val = os.getenv("ORIG_" .. var) or ""
+        if orig_val ~= "" then
+            dbg.print{"Setting ", var, " to ", orig_val, "\n"}
+            posix.setenv(var, orig_val)
+        end
+    end
 
     dbg.fini()
 end
@@ -158,7 +158,7 @@ end
 
 
 hook.register("load", load_hook)
-hook.register("restore", restore_hook)
+-- hook.register("restore", restore_hook)
 hook.register("startup", startup_hook)
 hook.register("msgHook", msg_hook)
 hook.register("SiteName", site_name_hook)
