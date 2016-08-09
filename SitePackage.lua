@@ -40,7 +40,7 @@ local function load_hook(t)
     --     t.modFullName:  the module full name: (i.e: gcc/4.7.2)
     --     t.fn:           the file name: (i.e /apps/modulefiles/Core/gcc/4.7.2.lua)
 
-    -- I think this is pointless?
+    -- unclear whether this is needed (and rtmclay agrees), but no harm in keeping it
     if (mode() ~= "load") then return end
 
     local mStack   = ModuleStack:moduleStack()
