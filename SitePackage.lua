@@ -81,10 +81,9 @@ end
 local function startup_hook(usrCmd)
     -- This hook is called right after starting Lmod
     -- usrCmd holds the currect active command
-    -- if you want access to all give arguments, use
-    -- masterTbl
     dbg.start{"startup_hook"}
 
+    -- masterTbl has all info about the arguments passed to Lmod
     local masterTbl = masterTbl()
 
     dbg.print{"Received usrCmd: ", usrCmd, "\n"}
@@ -158,6 +157,7 @@ end
 
 
 hook.register("load", load_hook)
+-- Needs more testing before enabling:
 -- hook.register("restore", restore_hook)
 hook.register("startup", startup_hook)
 hook.register("msgHook", msg_hook)
