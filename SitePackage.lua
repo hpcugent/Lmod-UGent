@@ -44,6 +44,7 @@ local function load_hook(t)
     if (mode() ~= "load") then return end
 
     local mStack   = ModuleStack:moduleStack()
+    -- yes means that it is a module directly request by the user
     local userload = (mStack:atTop()) and "yes" or "no"
 
     local logTbl      = {}
