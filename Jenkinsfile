@@ -12,4 +12,12 @@ node {
     sh "tar -xzf rpmlint-${RPMLINT_VERSION}.tar.gz"
     env.PATH = "${pwd()}/rpmlint-rpmlint-${RPMLINT_VERSION}:${env.PATH}"
     sh "rpmlint Lmod-UGent.spec"
+
+    stage 'luacheck SitePackage'
+    sh "mkdir luatree"
+    sh "luarocks --tree=${pwd()}/luatree install luacheck"
+    env.PATH = "${pwd()}/luatree/bin:${env.PATH}"
+    env.LUA_PATH = "${pwd()}/luatree/share/lua/5.1/?.lua;${pwd()}/luatree/share/lua/5.1/?/init.lua;;"
+    env.LUA_CPATH = "${pwd()}/luatree/lib/lua/5.1/?.so;;"
+    sh "luacheck SitePackage.lua"
 }
