@@ -56,6 +56,7 @@ local function load_hook(t)
 end
 
 
+--[[
 local function restore_hook(t)
     -- This hook is called after a restore operation
     -- the arg t is a table:
@@ -77,6 +78,7 @@ local function restore_hook(t)
 
     dbg.fini()
 end
+]]--
 
 
 local function startup_hook(usrCmd)
