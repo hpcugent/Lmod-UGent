@@ -19,6 +19,7 @@ node {
     env.PATH = "${pwd()}/luatree/bin:${env.PATH}"
     env.LUA_PATH = "${pwd()}/luatree/share/lua/5.1/?.lua;${pwd()}/luatree/share/lua/5.1/?/init.lua;;"
     env.LUA_CPATH = "${pwd()}/luatree/lib/lua/5.1/?.so;;"
-    sh "luacheck --formatter JUnit SitePackage.lua > SitePackage.lua.test.xml || true"
+    sh "luacheck -g --formatter JUnit SitePackage.lua > SitePackage.lua.test.xml || true"
+    sh "cat SitePackage.lua.test.xml"
     junit "SitePackage.lua.test.xml"
 }
