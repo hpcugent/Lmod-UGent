@@ -2,7 +2,7 @@
 
 Name:           Lmod
 Version:        6.5.1
-Release:        1.ug%{?dist}
+Release:        2.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -13,6 +13,7 @@ Source1:        macros.%{name}
 Source2:        SitePackage.lua
 Source3:        run_lmod_cache.py
 Patch0:         Lmod-ml-rename-ld-path.patch
+Patch1:         Unset-LD_PRELOAD-before-running-tcl2lua.patch
 
 BuildArch:      noarch
 BuildRequires:  lua-filesystem

@@ -1,0 +1,66 @@
+From 36c030bd97ebaa6a69f03c4108d9b91fde475d94 Mon Sep 17 00:00:00 2001
+From: Ward Poelmans <wpoely86@gmail.com>
+Date: Thu, 25 Aug 2016 10:52:15 +0200
+Subject: [PATCH] Unset LD_PRELOAD before running tcl2lua
+
+---
+ src/MAlias.lua         | 1 +
+ src/loadModuleFile.lua | 3 ++-
+ src/utils.lua          | 3 ++-
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/src/MAlias.lua b/src/MAlias.lua
+index f76283e..3ab2a1f 100644
+--- a/src/MAlias.lua
++++ b/src/MAlias.lua
+@@ -165,6 +165,7 @@ function M.resolve(self, name)
+          if (isFile(fn)) then
+             local a   = {}
+             a[#a + 1] = "LD_LIBRARY_PATH=\"".. (LMOD_LD_LIBRARY_PATH or "") .. "\""
++            a[#a + 1] = "LD_PRELOAD=\"\""
+             a[#a + 1] = LMOD_TCLSH
+             a[#a + 1] = pathJoin(cmdDir(),"RC2lua.tcl")
+             a[#a + 1] = fn
+diff --git a/src/loadModuleFile.lua b/src/loadModuleFile.lua
+index 4a24e96..9565506 100644
+--- a/src/loadModuleFile.lua
++++ b/src/loadModuleFile.lua
+@@ -104,12 +104,13 @@ function loadModuleFile(t)
+          A[#A + 1]    = "-L"
+          A[#A + 1]    = "\"" .. ldlib .. "\""
+       end
+-      
++
+       if (t.help) then
+          A[#A + 1] = "-h"
+       end
+       local a      = {}
+       a[#a + 1]    = "LD_LIBRARY_PATH=\"".. (LMOD_LD_LIBRARY_PATH or "") .. "\""
++      a[#a + 1]    = "LD_PRELOAD=\"\""
+       a[#a + 1]    = LMOD_TCLSH
+       a[#a + 1]	   = pathJoin(cmdDir(),"tcl2lua.tcl")
+       a[#a + 1]	   = concatTbl(A," ")
+diff --git a/src/utils.lua b/src/utils.lua
+index 6e1fe0a..c560a84 100644
+--- a/src/utils.lua
++++ b/src/utils.lua
+@@ -866,6 +866,7 @@ function versionFile(v, sn, path, ignoreErrors)
+    dbg.print{"handle file: ",v, "\n"}
+    local a = {}
+    a[#a + 1] = "LD_LIBRARY_PATH=\"".. (LMOD_LD_LIBRARY_PATH or "") .. "\""
++   a[#a + 1] = "LD_PRELOAD=\"\""
+    a[#a + 1] = LMOD_TCLSH
+    a[#a + 1] = pathJoin(cmdDir(),"RC2lua.tcl")
+    a[#a + 1] = path
+@@ -1071,7 +1072,7 @@ function walk_directory_for_mf(mpath, path, prefix, dirA, mnameT)
+          local file    = v.file
+          local mypath  = v.path
+          local pathEsc = "^" .. mypath:escape() .. "/"
+-      
++
+          for root, mydirA, fileA in dir_walk(pathJoin(mypath,file)) do
+             for ja = 1, #fileA do
+                local f       = pathJoin(root,fileA[ja])
+-- 
+2.7.4
+
