@@ -40,6 +40,7 @@ where the library and header files can be found.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 sed -i -e 's,/usr/bin/env ,/usr/bin/,' src/*.tcl
 # Remove bundled lua-term
 rm -r pkgs tools/json.lua
