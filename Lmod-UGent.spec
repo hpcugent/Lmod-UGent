@@ -1,8 +1,8 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        6.5.1
-Release:        2.ug%{?dist}
+Version:        6.5.2
+Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -13,7 +13,6 @@ Source1:        macros.%{name}
 Source2:        SitePackage.lua
 Source3:        run_lmod_cache.py
 Patch0:         Lmod-ml-rename-ld-path.patch
-Patch1:         Unset-LD_PRELOAD-before-running-tcl2lua.patch
 
 BuildArch:      noarch
 BuildRequires:  lua-filesystem
@@ -40,7 +39,6 @@ where the library and header files can be found.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 sed -i -e 's,/usr/bin/env ,/usr/bin/,' src/*.tcl
 # Remove bundled lua-term
 rm -r pkgs tools/json.lua
