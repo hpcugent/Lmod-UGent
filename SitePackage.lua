@@ -134,8 +134,8 @@ local function msg_hook(mode, output)
 
     if output[1] and output[1]:find("Your site prevents the automatic swapping of modules with same name") then
         -- find the module name causing the issue (almost always toolchain module)
-        local fname, mname
-        mname, fname = output[1]:match("$ module swap ([^ ]+)%s+([^ \n]+)")
+        local mname
+        mname = output[1]:match("$ module swap [^ ]+%s+([^ \n]+)")
         local mStack   = ModuleStack:moduleStack()
 
         local label  = colorize("red", "Lmod has detected the following error: ")
