@@ -132,6 +132,26 @@ local function msg_hook(mode, output)
 
     dbg.print{"Mode is ", mode, "\n"}
 
+    if output[1] and output[1]:find("Your site prevents the automatic swapping of modules with same name") then
+        -- find the module name causing the issue (almost always toolchain module)
+        local fname, mname
+        mname, fname = output[1]:match("$ module swap ([^ ]+)%s+([^ \n]+)")
+        local mStack   = ModuleStack:moduleStack()
+
+        local label  = colorize("red", "Lmod has detected the following error: ")
+        local twidth = TermWidth()
+        local s      = {}
+        s[#s+1] = buildMsg(twidth, label, "You can not load modules using different toolchains.",
+                                          "A different version of the '"..mname.."' module is already",
+                                          "loaded (see output of 'ml').\nYou should load another ",
+                                          "'"..mStack:sn().."' module for that is compatible with the ",
+                                          "currently loaded version of '"..mname.."'. Use 'ml spider",
+                                          ""..mStack:sn().."' to get an overview of the available versions.")
+        s[#s+1] = "\n"
+
+        output[1] = table.concat(s,"")
+    end
+
     if mode == "avail" then
         output[#output+1] = "\nIf you need software that is not listed, request it at hpc@ugent.be\n"
     elseif mode == "lmoderror" or mode == "lmodwarning" then
