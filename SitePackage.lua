@@ -139,15 +139,14 @@ local function msg_hook(mode, output)
 
         local errmsg = {"A different version of the '"..sname.."' module is already loaded (see output of 'ml')."}
         if not mStack:empty() then
-            errmsg[#errmsg+1] = " You should load another '"..mStack:sn().."' module for that is compatible with the "
-            errmsg[#errmsg+1] = "currently loaded version of '"..sname.."'. Use 'ml spider "..mStack:sn().."' to get "
-            errmsg[#errmsg+1] = "an overview of the available versions."
+            errmsg[#errmsg+1] = "You should load another '"..mStack:sn().."' module for that is compatible with the currently loaded version of '"..sname.."'."
+            errmsg[#errmsg+1] = "Use 'ml spider "..mStack:sn().."' to get an overview of the available versions."
         end
 
         local label  = colorize("red", "Lmod has detected the following error: ")
         local twidth = TermWidth()
         local s      = {}
-        s[#s+1]      = buildMsg(twidth, label, table.concat(errmsg, ""))
+        s[#s+1]      = buildMsg(twidth, label, table.concat(errmsg, "\n"))
         s[#s+1]      = "\n"
         output[1]    = table.concat(s, "")
     end
