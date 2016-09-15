@@ -32,7 +32,7 @@ local function logmsg(logTbl)
         msg = msg .. string.format(", %s=%s", val[1], val[2] or "")
     end
 
-    lmod_system_execute("logger -t lmod -p user.notice -- " .. msg)
+    lmod_system_execute("/bin/logger -t lmod -p user.notice -- " .. msg)
 end
 
 
