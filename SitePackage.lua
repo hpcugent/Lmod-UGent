@@ -134,22 +134,22 @@ local function msg_hook(mode, output)
 
     if output[1] and output[1]:find("Your site prevents the automatic swapping of modules with same name") then
         -- find the module name causing the issue (almost always toolchain module)
-        local mname
-        mname = output[1]:match("$ module swap [^ ]+%s+([^ \n]+)")
-        local mStack   = ModuleStack:moduleStack()
+        local sname  = output[1]:match("$ module swap ([^ ]+)%s+[^ \n]+")
+        local mStack = ModuleStack:moduleStack()
+
+        local errmsg = {"A different version of the '"..sname.."' module is already loaded (see output of 'ml')."}
+        if not mStack:empty() then
+            errmsg[#errmsg+1] = " You should load another '"..mStack:sn().."' module for that is compatible with the "
+            errmsg[#errmsg+1] = "currently loaded version of '"..sname.."'. Use 'ml spider "..mStack:sn().."' to get "
+            errmsg[#errmsg+1] = "an overview of the available versions."
+        end
 
         local label  = colorize("red", "Lmod has detected the following error: ")
         local twidth = TermWidth()
         local s      = {}
-        s[#s+1] = buildMsg(twidth, label, "You can not load modules using different toolchains.",
-                                          "A different version of the '"..mname.."' module is already",
-                                          "loaded (see output of 'ml').\nYou should load another ",
-                                          "'"..mStack:sn().."' module for that is compatible with the ",
-                                          "currently loaded version of '"..mname.."'. Use 'ml spider",
-                                          ""..mStack:sn().."' to get an overview of the available versions.")
-        s[#s+1] = "\n"
-
-        output[1] = table.concat(s,"")
+        s[#s+1]      = buildMsg(twidth, label, table.concat(errmsg, ""))
+        s[#s+1]      = "\n"
+        output[1]    = table.concat(s, "")
     end
 
     if mode == "avail" then
