@@ -132,10 +132,33 @@ local function msg_hook(mode, output)
 
     dbg.print{"Mode is ", mode, "\n"}
 
+    if output[1] and output[1]:find("Your site prevents the automatic swapping of modules with same name") then
+        -- find the module name causing the issue (almost always toolchain module)
+        local sname  = output[1]:match("$ module swap ([^ ]+)%s+[^ \n]+")
+        local mStack = ModuleStack:moduleStack()
+
+        local errmsg = {"A different version of the '"..sname.."' module is already loaded (see output of 'ml')."}
+        if not mStack:empty() then
+            errmsg[#errmsg+1] = "You should load another '"..mStack:sn().."' module for that is compatible with the currently loaded version of '"..sname.."'."
+            errmsg[#errmsg+1] = "Use 'ml spider "..mStack:sn().."' to get an overview of the available versions."
+        end
+
+        local label  = colorize("red", "Lmod has detected the following error: ")
+        local twidth = TermWidth()
+        local s      = {}
+        s[#s+1]      = buildMsg(twidth, label, table.concat(errmsg, "\n"))
+        output[1]    = table.concat(s, "")
+    end
+
     if mode == "avail" then
         output[#output+1] = "\nIf you need software that is not listed, request it at hpc@ugent.be\n"
     elseif mode == "lmoderror" or mode == "lmodwarning" then
-        output[#output+1] = "\nIf you don't understand the warning or error, contact the helpdesk at hpc@ugent.be\n"
+        -- until https://github.com/TACC/Lmod/pull/166 is merged
+        if output[#output] ~= "\n" or output[#output-1] ~= '' then
+            output[#output+1] = "\n"
+        end
+        output[#output+1] = "If you don't understand the warning or error, contact the helpdesk at hpc@ugent.be"
+        output[#output+1] = "\n"
     end
 
     dbg.fini()
