@@ -147,14 +147,18 @@ local function msg_hook(mode, output)
         local twidth = TermWidth()
         local s      = {}
         s[#s+1]      = buildMsg(twidth, label, table.concat(errmsg, "\n"))
-        s[#s+1]      = "\n"
         output[1]    = table.concat(s, "")
     end
 
     if mode == "avail" then
         output[#output+1] = "\nIf you need software that is not listed, request it at hpc@ugent.be\n"
     elseif mode == "lmoderror" or mode == "lmodwarning" then
-        output[#output+1] = "\nIf you don't understand the warning or error, contact the helpdesk at hpc@ugent.be\n"
+        -- until https://github.com/TACC/Lmod/pull/166 is merged
+        if output[#output] ~= "\n" or output[#output-1] ~= '' then
+            output[#output+1] = "\n"
+        end
+        output[#output+1] = "If you don't understand the warning or error, contact the helpdesk at hpc@ugent.be"
+        output[#output+1] = "\n"
     end
 
     dbg.fini()
