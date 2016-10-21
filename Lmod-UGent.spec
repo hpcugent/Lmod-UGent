@@ -81,6 +81,9 @@ install -Dpm 755 %{SOURCE3} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 
 
 %changelog
+* Fri Oct 14 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.6-1ug
+- Use the json config interface of Lmod in cache creation script
+
 * Thu May 19 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.3.5-2ug
 - Add icinga/nagios wrapper for cache creation script
 
