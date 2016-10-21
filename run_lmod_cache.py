@@ -16,6 +16,7 @@ It also can check if the age of the current age and will report if it's too old.
 
 @author: Ward Poelmans (Ghent University)
 """
+import json
 import os
 import sys
 import time
@@ -34,7 +35,7 @@ def run_cache_create(modules_root):
     """Run the script to create the Lmod cache"""
     lmod_dir = os.environ.get("LMOD_DIR", None)
     if not lmod_dir:
-        return (1, "Cannot find $LMOD_DIR in the environment.")
+        raise RuntimeError("Cannot find $LMOD_DIR in the environment.")
 
     cmd = "%s/update_lmod_system_cache_files %s" % (lmod_dir, modules_root)
     return run_simple(cmd)
@@ -42,15 +43,26 @@ def run_cache_create(modules_root):
 
 def get_lmod_config():
     """Get the modules root and cache path from the Lmod config"""
-    # the information needed can be found in ml --config but
-    # it's not parser friendly. The code below will be replaced
-    # once ml --config-json works and we can query Lmod for its config
-    # in json format
-    config = {
-        'modules_root': '/etc/modulefiles/vsc',
-        'cache_dir': '/apps/gent/lmodcache/',
-        'cache_timestamp': '/apps/gent/lmodcache/timestamp',
-    }
+    lmod_cmd = os.environ.get("LMOD_CMD", None)
+    if not lmod_cmd:
+        raise RuntimeError("Cannot find $LMOD_CMD in the environment.")
+
+    ec, out = run_simple("%s bash --config-json" % lmod_cmd)
+    if ec != 0:
+        raise RuntimeError("Failed to get Lmod configuration: %s", out)
+
+    try:
+        lmodconfig = json.loads(out)
+
+        config = {
+            'modules_root': lmodconfig['config']['mpath_root'],
+            'cache_dir': lmodconfig['cache'][0][0],
+            'cache_timestamp': lmodconfig['cache'][0][1],
+        }
+        logger.debug("Found Lmod config: %s", config)
+    except (ValueError, KeyError, IndexError, TypeError) as err:
+        raise RuntimeError("Failed to parse the Lmod configuration: %s", err)
+
     return config
 
 
@@ -66,9 +78,9 @@ def main():
     }
     opts = ExtendedSimpleOption(options)
 
-    config = get_lmod_config()
-
     try:
+        config = get_lmod_config()
+
         if opts.options.create_cache:
             opts.log.info("Updating the Lmod cache")
             exitcode, msg = run_cache_create(config['modules_root'])
@@ -87,7 +99,11 @@ def main():
             opts.warning(errmsg)
             sys.exit(NAGIOS_EXIT_WARNING)
 
-    except Exception, err:
+    except RuntimeError as err:
+        logger.exception("Failed to update Lmod cache: %s", err)
+        opts.critical("Failed to update Lmod cache. See logs.")
+        sys.exit(NAGIOS_EXIT_CRITICAL)
+    except Exception as err:  # pylint: disable=W0703
         logger.exception("critical exception caught: %s", err)
         opts.critical("Script failed because of uncaught exception. See logs.")
         sys.exit(NAGIOS_EXIT_CRITICAL)

@@ -1,7 +1,7 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        6.5.16
+Version:        6.6
 Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
@@ -71,7 +71,7 @@ install -Dpm 755 %{SOURCE3} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 
 
 %files
-%doc INSTALL License README README_lua_modulefiles.txt
+%doc INSTALL License README.md README_lua_modulefiles.txt
 %{_sysconfdir}/modulefiles
 %{_sysconfdir}/profile.d/modules.csh
 %{_sysconfdir}/profile.d/modules.sh
@@ -81,6 +81,9 @@ install -Dpm 755 %{SOURCE3} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 
 
 %changelog
+* Fri Oct 14 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.6-1ug
+- Use the json config interface of Lmod in cache creation script
+
 * Thu May 19 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.3.5-2ug
 - Add icinga/nagios wrapper for cache creation script
 

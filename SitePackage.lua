@@ -173,11 +173,7 @@ end
 local function packagebasename(t)
     -- Use the EBROOT variables in the module
     -- as base dir for the reverse map
-    dbg.start{"packagebasename_hook"}
-
     t.patDir = "^EBROOT.*"
-
-    dbg.fini()
 end
 
 
