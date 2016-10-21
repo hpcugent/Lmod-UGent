@@ -35,7 +35,7 @@ def run_cache_create(modules_root):
     """Run the script to create the Lmod cache"""
     lmod_dir = os.environ.get("LMOD_DIR", None)
     if not lmod_dir:
-        raise OSError("Cannot find $LMOD_DIR in the environment.")
+        raise RuntimeError("Cannot find $LMOD_DIR in the environment.")
 
     cmd = "%s/update_lmod_system_cache_files %s" % (lmod_dir, modules_root)
     return run_simple(cmd)
@@ -45,11 +45,11 @@ def get_lmod_config():
     """Get the modules root and cache path from the Lmod config"""
     lmod_cmd = os.environ.get("LMOD_CMD", None)
     if not lmod_cmd:
-        raise OSError("Cannot find $LMOD_CMD in the environment.")
+        raise RuntimeError("Cannot find $LMOD_CMD in the environment.")
 
     ec, out = run_simple("%s bash --config-json" % lmod_cmd)
     if ec != 0:
-        raise OSError("Failed to get Lmod configuration: %s", out)
+        raise RuntimeError("Failed to get Lmod configuration: %s", out)
 
     try:
         lmodconfig = json.loads(out)
@@ -61,7 +61,7 @@ def get_lmod_config():
         }
         logger.debug("Found Lmod config: %s", config)
     except (ValueError, KeyError, IndexError, TypeError) as err:
-        raise OSError("Failed to parse the Lmod configuration: %s", err)
+        raise RuntimeError("Failed to parse the Lmod configuration: %s", err)
 
     return config
 
@@ -99,7 +99,7 @@ def main():
             opts.warning(errmsg)
             sys.exit(NAGIOS_EXIT_WARNING)
 
-    except OSError as err:
+    except RuntimeError as err:
         logger.exception("Failed to update Lmod cache: %s", err)
         opts.critical("Failed to update Lmod cache. See logs.")
         sys.exit(NAGIOS_EXIT_CRITICAL)
