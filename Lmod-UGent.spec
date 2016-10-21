@@ -1,7 +1,7 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        6.5.16
+Version:        6.6
 Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
@@ -71,7 +71,7 @@ install -Dpm 755 %{SOURCE3} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 
 
 %files
-%doc INSTALL License README README_lua_modulefiles.txt
+%doc INSTALL License README.md README_lua_modulefiles.txt
 %{_sysconfdir}/modulefiles
 %{_sysconfdir}/profile.d/modules.csh
 %{_sysconfdir}/profile.d/modules.sh
