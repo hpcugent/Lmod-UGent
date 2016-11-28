@@ -1,0 +1,32 @@
+scripts/2.6.0: Do not load a specific version of the scripts module. Only do: module load scripts
+
+scripts/3.0.0: Do not load a specific version of the scripts module. Only do: module load scripts
+
+scripts/3.2.1: Do not load a specific version of the scripts module. Only do: module load scripts
+
+scripts/4.0.0: Do not load a specific version of the scripts module. Only do: module load scripts
+
+VSC-tools/0.1.3-ictce-4.1.13-scoop: Do not use the VSC-tools module anymore. Load vsc-mympirun directly.
+
+VSC-tools/0.1.5-ictce-4.1.13-scoop: Do not use the VSC-tools module anymore. Load vsc-mympirun directly.
+
+VSC-tools/0.1.5: Do not use the VSC-tools module anymore. Load vsc-mympirun directly.
+
+VSC-tools/1.7.1-ictce-4.1.13-scoop: Do not use the VSC-tools module anymore. Load vsc-mympirun directly.
+
+VSC-tools/1.7.1-ictce-5.5.0-Python-2.7.6: Do not use the VSC-tools module anymore. Load vsc-mympirun directly.
+
+VSC-tools/1.7.1: Do not use the VSC-tools module anymore. Load vsc-mympirun directly.
+
+VSC-tools/2.0.0: Do not use the VSC-tools module anymore. Load vsc-mympirun directly.
+
+jobs/1.0.0: Do not use the jobs module anymore. Load vsc-mympirun directly.
+
+jobs/1.0.1: Do not use the jobs module anymore. Load vsc-mympirun directly.
+
+jobs/1.0.1.666: Do not use the jobs module anymore. Load vsc-mympirun directly.
+
+jobs/1.0.2: Do not use the jobs module anymore. Load vsc-mympirun directly.
+
+jobs/2.0.0: Do not use the jobs module anymore. Load vsc-mympirun directly.
+
