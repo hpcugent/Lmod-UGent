@@ -2,7 +2,7 @@
 
 Name:           Lmod
 Version:        6.6
-Release:        1.ug%{?dist}
+Release:        2.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -12,6 +12,7 @@ Source0:        https://github.com/TACC/Lmod/archive/%{version}.tar.gz#/Lmod-%{v
 Source1:        macros.%{name}
 Source2:        SitePackage.lua
 Source3:        run_lmod_cache.py
+Source4:        admin.list
 Patch0:         Lmod-ml-rename-ld-path.patch
 
 BuildArch:      noarch
@@ -68,6 +69,9 @@ install -Dpm 644 %{SOURCE1} %{buildroot}/%{macrosdir}/macros.%{name}
 install -Dpm 644 %{SOURCE2} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 # install icinga/nagios wrapper for the cache creation
 install -Dpm 755 %{SOURCE3} %{buildroot}%{_datadir}/lmod/%{version}/libexec
+# install admin.list
+mkdir -p %{buildroot}%{_datadir}/lmod/%{version}/etc
+install -Dpm 644 %{SOURCE4} %{buildroot}%{_datadir}/lmod/%{version}/etc
 
 
 %files
@@ -81,6 +85,9 @@ install -Dpm 755 %{SOURCE3} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 
 
 %changelog
+* Mon Nov 28 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.6-2ug
+- Install a admin.list (aka nag file)
+
 * Fri Oct 14 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.6-1ug
 - Use the json config interface of Lmod in cache creation script
 
