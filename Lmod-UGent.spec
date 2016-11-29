@@ -2,7 +2,7 @@
 
 Name:           Lmod
 Version:        6.6
-Release:        2.ug%{?dist}
+Release:        3.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -70,8 +70,8 @@ install -Dpm 644 %{SOURCE2} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 # install icinga/nagios wrapper for the cache creation
 install -Dpm 755 %{SOURCE3} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 # install admin.list
-mkdir -p %{buildroot}%{_datadir}/lmod/%{version}/etc
-install -Dpm 644 %{SOURCE4} %{buildroot}%{_datadir}/lmod/%{version}/etc
+mkdir -p %{buildroot}%{_datadir}/lmod/etc
+install -Dpm 644 %{SOURCE4} %{buildroot}%{_datadir}/lmod/etc
 
 
 %files
