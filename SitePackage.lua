@@ -177,10 +177,10 @@ local function packagebasename(t)
 end
 
 
- hook.register("load", load_hook)
+hook.register("load", load_hook)
 -- Needs more testing before enabling:
 -- hook.register("restore", restore_hook)
- hook.register("startup", startup_hook)
+hook.register("startup", startup_hook)
 hook.register("msgHook", msg_hook)
 hook.register("SiteName", site_name_hook)
 hook.register("packagebasename", packagebasename)
