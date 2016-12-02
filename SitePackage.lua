@@ -12,7 +12,7 @@ local Dbg   = require("Dbg")
 local dbg   = Dbg:dbg()
 local hook  = require("Hook")
 local posix = require("posix")
-local ModuleStack  = require("ModuleStack")
+local FrameStk  = require("FrameStk")
 
 
 local function logmsg(logTbl)
@@ -45,9 +45,9 @@ local function load_hook(t)
     -- unclear whether this is needed (and rtmclay agrees), but no harm in keeping it
     if (mode() ~= "load") then return end
 
-    local mStack   = ModuleStack:moduleStack()
+    local frameStk = FrameStk:singleton()
     -- yes means that it is a module directly request by the user
-    local userload = (mStack:atTop()) and "yes" or "no"
+    local userload = (frameStk:atTop()) and "yes" or "no"
 
     local logTbl      = {}
     logTbl[#logTbl+1] = {"userload", userload}
@@ -135,12 +135,12 @@ local function msg_hook(mode, output)
     if output[1] and output[1]:find("Your site prevents the automatic swapping of modules with same name") then
         -- find the module name causing the issue (almost always toolchain module)
         local sname  = output[1]:match("$ module swap ([^ ]+)%s+[^ \n]+")
-        local mStack = ModuleStack:moduleStack()
+        local frameStk = FrameStk:singleton()
 
         local errmsg = {"A different version of the '"..sname.."' module is already loaded (see output of 'ml')."}
-        if not mStack:empty() then
-            errmsg[#errmsg+1] = "You should load another '"..mStack:sn().."' module for that is compatible with the currently loaded version of '"..sname.."'."
-            errmsg[#errmsg+1] = "Use 'ml spider "..mStack:sn().."' to get an overview of the available versions."
+        if not frameStk:empty() then
+            errmsg[#errmsg+1] = "You should load another '"..frameStk:sn().."' module for that is compatible with the currently loaded version of '"..sname.."'."
+            errmsg[#errmsg+1] = "Use 'ml spider "..frameStk:sn().."' to get an overview of the available versions."
         end
 
         local label  = colorize("red", "Lmod has detected the following error: ")
