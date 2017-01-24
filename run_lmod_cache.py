@@ -30,6 +30,7 @@ logger = fancylogger.getLogger(__name__)
 fancylogger.logToScreen(True)
 fancylogger.setLogLevelInfo()
 
+NAGIOS_CHECK_INTERVAL_THRESHOLD = 2 * 60 * 60  # 2 hours
 
 def run_cache_create(modules_root):
     """Run the script to create the Lmod cache"""
@@ -72,6 +73,7 @@ def main():
     Returns the errors if any in a nagios/icinga friendly way.
     """
     options = {
+        'nagios-check-interval-threshold': NAGIOS_CHECK_INTERVAL_THRESHOLD,
         'create-cache': ('Create the Lmod cache', None, 'store_true', False),
         'freshness-threshold': ('The interval in minutes for how long we consider the cache to be fresh',
                                 'int', 'store', 120),
