@@ -12,7 +12,7 @@ local Dbg   = require("Dbg")
 local dbg   = Dbg:dbg()
 local hook  = require("Hook")
 local posix = require("posix")
-local ModuleStack  = require("ModuleStack")
+local FrameStk  = require("FrameStk")
 
 
 local function logmsg(logTbl)
@@ -45,9 +45,9 @@ local function load_hook(t)
     -- unclear whether this is needed (and rtmclay agrees), but no harm in keeping it
     if (mode() ~= "load") then return end
 
-    local mStack   = ModuleStack:moduleStack()
+    local frameStk = FrameStk:singleton()
     -- yes means that it is a module directly request by the user
-    local userload = (mStack:atTop()) and "yes" or "no"
+    local userload = (frameStk:atTop()) and "yes" or "no"
 
     local logTbl      = {}
     logTbl[#logTbl+1] = {"userload", userload}
@@ -124,38 +124,51 @@ local function startup_hook(usrCmd)
 end
 
 
+local function errwarnmsg_hook(kind, key, msg)
+    -- kind is either lmoderror, lmodwarning or lmodmessage
+    -- msg is the actual message to display (as string)
+    -- key is a unique key for the message (see MessageT.lua)
+    dbg.start{"errwarnmsg_hook"}
+
+    dbg.print{"kind: ", kind}
+    dbg.print{"Msg: ", msg}
+    dbg.print{"key: ", key}
+
+    if key == "e_No_AutoSwap" then
+        -- find the module name causing the issue (almost always toolchain module)
+        local sname  = msg:match("$ module swap ([^ ]+)%s+[^ \n]+")
+        local frameStk = FrameStk:singleton()
+
+        local errmsg = {"A different version of the '"..sname.."' module is already loaded (see output of 'ml')."}
+        if not frameStk:empty() then
+            errmsg[#errmsg+1] = "You should load another '"..frameStk:sn().."' module for that is compatible with the currently loaded version of '"..sname.."'."
+            errmsg[#errmsg+1] = "Use 'ml spider "..frameStk:sn().."' to get an overview of the available versions."
+        end
+        errmsg[#errmsg+1] = "\n"
+
+        msg = table.concat(errmsg, "\n")
+    end
+
+    if kind == "lmoderror" or kind == "lmodwarning" then
+        msg = msg .. "\nIf you don't understand the warning or error, contact the helpdesk at hpc@ugent.be"
+    end
+
+    dbg.fini()
+
+    return msg
+end
+
+
 local function msg_hook(mode, output)
-    -- mode is avail, list, ...
+    -- mode is avail, list or spider
     -- output is a table with the current output
 
     dbg.start{"msg_hook"}
 
     dbg.print{"Mode is ", mode, "\n"}
 
-    if output[1] and output[1]:find("Your site prevents the automatic swapping of modules with same name") then
-        -- find the module name causing the issue (almost always toolchain module)
-        local sname  = output[1]:match("$ module swap ([^ ]+)%s+[^ \n]+")
-        local mStack = ModuleStack:moduleStack()
-
-        local errmsg = {"A different version of the '"..sname.."' module is already loaded (see output of 'ml')."}
-        if not mStack:empty() then
-            errmsg[#errmsg+1] = "You should load another '"..mStack:sn().."' module for that is compatible with the currently loaded version of '"..sname.."'."
-            errmsg[#errmsg+1] = "Use 'ml spider "..mStack:sn().."' to get an overview of the available versions."
-        end
-
-        local label  = colorize("red", "Lmod has detected the following error: ")
-        local twidth = TermWidth()
-        local s      = {}
-        s[#s+1]      = buildMsg(twidth, label, table.concat(errmsg, "\n"))
-        output[1]    = table.concat(s, "")
-    end
-
     if mode == "avail" then
         output[#output+1] = "\nIf you need software that is not listed, request it at hpc@ugent.be\n"
-    elseif mode == "lmoderror" or mode == "lmodwarning" then
-        output[#output+1] = "\n"
-        output[#output+1] = "If you don't understand the warning or error, contact the helpdesk at hpc@ugent.be"
-        output[#output+1] = "\n"
     end
 
     dbg.fini()
@@ -184,3 +197,4 @@ hook.register("startup", startup_hook)
 hook.register("msgHook", msg_hook)
 hook.register("SiteName", site_name_hook)
 hook.register("packagebasename", packagebasename)
+hook.register("errWarnMsgHook", errwarnmsg_hook)
