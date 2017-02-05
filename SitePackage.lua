@@ -124,19 +124,20 @@ local function startup_hook(usrCmd)
 end
 
 
-local function errwarnmsg_hook(kind, key, msg)
+local function errwarnmsg_hook(kind, key, msg, t)
     -- kind is either lmoderror, lmodwarning or lmodmessage
     -- msg is the actual message to display (as string)
-    -- key is a unique key for the message (see MessageT.lua)
+    -- key is a unique key for the message (see messageT.lua)
+    -- t is a table with the keys used in msg
     dbg.start{"errwarnmsg_hook"}
 
     dbg.print{"kind: ", kind}
     dbg.print{"Msg: ", msg}
-    dbg.print{"key: ", key}
+    dbg.print{"keys: ", t}
 
     if key == "e_No_AutoSwap" then
         -- find the module name causing the issue (almost always toolchain module)
-        local sname  = msg:match("$ module swap ([^ ]+)%s+[^ \n]+")
+        local sname = t.sn
         local frameStk = FrameStk:singleton()
 
         local errmsg = {"A different version of the '"..sname.."' module is already loaded (see output of 'ml')."}
