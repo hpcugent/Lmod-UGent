@@ -8,6 +8,7 @@ require("strict")
 require("cmdfuncs")
 require("utils")
 require("lmod_system_execute")
+require("parseVersion")
 local Dbg   = require("Dbg")
 local dbg   = Dbg:dbg()
 local hook  = require("Hook")
@@ -191,6 +192,22 @@ local function packagebasename(t)
 end
 
 
+local function visible_hook(modT)
+    -- modT is a table with: fullName, sn, fn and isVisible
+    -- The latter is a boolean to determine if a module is visible or not
+
+    -- EasyBuild example: if the intel or foss toolchain is older then 2 years, hide it.
+    -- Lua patterns do not support "intel|foss"
+    local tcver = modT.fullName:match("intel%-(20[0-9][0-9][ab])") or modT.fullName:match("foss%-(20[0-9][0-9][ab])")
+    if tcver == nil then return end
+
+    local cutoff = string.format("%da", os.date("%Y") - 2)
+    if parseVersion(tcver) < parseVersion(cutoff) then
+        modT.isVisible = false
+    end
+end
+
+
 hook.register("load", load_hook)
 -- Needs more testing before enabling:
 -- hook.register("restore", restore_hook)
@@ -199,3 +216,4 @@ hook.register("msgHook", msg_hook)
 hook.register("SiteName", site_name_hook)
 hook.register("packagebasename", packagebasename)
 hook.register("errWarnMsgHook", errwarnmsg_hook)
+hook.register("isVisibleHook", visible_hook)
