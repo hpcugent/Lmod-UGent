@@ -61,7 +61,8 @@ rm $lmod_src
 wget -O $lmod_src "https://github.com/TACC/Lmod/archive/${vers}.tar.gz"
 mv $lmod_src $src_dir
 
-cp -a *.patch admin.list SitePackage.lua macros.Lmod run_lmod_cache.py $src_dir
+#cp -a *.patch admin.list SitePackage.lua macros.Lmod run_lmod_cache.py $src_dir
+cp -a admin.list SitePackage.lua macros.Lmod run_lmod_cache.py $src_dir
 
 echo "----> Building the package"
 

@@ -13,7 +13,6 @@ Source1:        macros.%{name}
 Source2:        SitePackage.lua
 Source3:        run_lmod_cache.py
 Source4:        admin.list
-Patch0:         Lmod-ml-rename-ld-path.patch
 
 BuildArch:      noarch
 BuildRequires:  lua-filesystem
@@ -39,7 +38,6 @@ where the library and header files can be found.
 
 %prep
 %setup -q
-%patch0 -p1
 sed -i -e 's,/usr/bin/env ,/usr/bin/,' src/*.tcl
 # Remove bundled lua-term
 rm -r pkgs tools/json.lua
@@ -85,6 +83,10 @@ install -Dpm 644 %{SOURCE4} %{buildroot}%{_datadir}/lmod/etc
 
 
 %changelog
+* Thu Jun 22 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.5.4-1ug
+- update to Lmod 7.5.4
+- fix msg hooks in SitePackage.lua (thanks to Ward Poelmans)
+- remove patch for 'module' and 'ml', no longer needed
 * Mon Nov 28 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.6-2ug
 - Install a admin.list (aka nag file)
 
