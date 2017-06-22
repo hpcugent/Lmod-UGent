@@ -127,8 +127,8 @@ end
 
 local function errwarnmsg_hook(kind, key, msg, t)
     -- kind is either lmoderror, lmodwarning or lmodmessage
-    -- msg is the actual message to display (as string)
     -- key is a unique key for the message (see messageT.lua)
+    -- msg is the actual message to display (as string)
     -- t is a table with the keys used in msg
     dbg.start{"errwarnmsg_hook"}
 
@@ -216,4 +216,5 @@ hook.register("msgHook", msg_hook)
 hook.register("SiteName", site_name_hook)
 hook.register("packagebasename", packagebasename)
 hook.register("errWarnMsgHook", errwarnmsg_hook)
-hook.register("isVisibleHook", visible_hook)
+-- kehoste: disabled for now, all existing modules remain visible (unless filename starts with '.')
+--hook.register("isVisibleHook", visible_hook)
