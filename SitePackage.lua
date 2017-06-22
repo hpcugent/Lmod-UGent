@@ -8,6 +8,7 @@ require("strict")
 require("cmdfuncs")
 require("utils")
 require("lmod_system_execute")
+require("parseVersion")
 local Dbg   = require("Dbg")
 local dbg   = Dbg:dbg()
 local hook  = require("Hook")
@@ -124,17 +125,20 @@ local function startup_hook(usrCmd)
 end
 
 
-local function msg_hook(mode, output)
-    -- mode is avail, list, ...
-    -- output is a table with the current output
+local function errwarnmsg_hook(kind, key, msg, t)
+    -- kind is either lmoderror, lmodwarning or lmodmessage
+    -- msg is the actual message to display (as string)
+    -- key is a unique key for the message (see messageT.lua)
+    -- t is a table with the keys used in msg
+    dbg.start{"errwarnmsg_hook"}
 
-    dbg.start{"msg_hook"}
+    dbg.print{"kind: ", kind}
+    dbg.print{"Msg: ", msg}
+    dbg.print{"keys: ", t}
 
-    dbg.print{"Mode is ", mode, "\n"}
-
-    if output[1] and output[1]:find("Your site prevents the automatic swapping of modules with same name") then
+    if key == "e_No_AutoSwap" then
         -- find the module name causing the issue (almost always toolchain module)
-        local sname  = output[1]:match("$ module swap ([^ ]+)%s+[^ \n]+")
+        local sname = t.sn
         local frameStk = FrameStk:singleton()
 
         local errmsg = {"A different version of the '"..sname.."' module is already loaded (see output of 'ml')."}
@@ -142,20 +146,31 @@ local function msg_hook(mode, output)
             errmsg[#errmsg+1] = "You should load another '"..frameStk:sn().."' module for that is compatible with the currently loaded version of '"..sname.."'."
             errmsg[#errmsg+1] = "Use 'ml spider "..frameStk:sn().."' to get an overview of the available versions."
         end
+        errmsg[#errmsg+1] = "\n"
 
-        local label  = colorize("red", "Lmod has detected the following error: ")
-        local twidth = TermWidth()
-        local s      = {}
-        s[#s+1]      = buildMsg(twidth, label, table.concat(errmsg, "\n"))
-        output[1]    = table.concat(s, "")
+        msg = table.concat(errmsg, "\n")
     end
+
+    if kind == "lmoderror" or kind == "lmodwarning" then
+        msg = msg .. "\nIf you don't understand the warning or error, contact the helpdesk at hpc@ugent.be"
+    end
+
+    dbg.fini()
+
+    return msg
+end
+
+
+local function msg_hook(mode, output)
+    -- mode is avail, list or spider
+    -- output is a table with the current output
+
+    dbg.start{"msg_hook"}
+
+    dbg.print{"Mode is ", mode, "\n"}
 
     if mode == "avail" then
         output[#output+1] = "\nIf you need software that is not listed, request it at hpc@ugent.be\n"
-    elseif mode == "lmoderror" or mode == "lmodwarning" then
-        output[#output+1] = "\n"
-        output[#output+1] = "If you don't understand the warning or error, contact the helpdesk at hpc@ugent.be"
-        output[#output+1] = "\n"
     end
 
     dbg.fini()
@@ -177,6 +192,22 @@ local function packagebasename(t)
 end
 
 
+local function visible_hook(modT)
+    -- modT is a table with: fullName, sn, fn and isVisible
+    -- The latter is a boolean to determine if a module is visible or not
+
+    -- EasyBuild example: if the intel or foss toolchain is older then 2 years, hide it.
+    -- Lua patterns do not support "intel|foss"
+    local tcver = modT.fullName:match("intel%-(20[0-9][0-9][ab])") or modT.fullName:match("foss%-(20[0-9][0-9][ab])")
+    if tcver == nil then return end
+
+    local cutoff = string.format("%da", os.date("%Y") - 2)
+    if parseVersion(tcver) < parseVersion(cutoff) then
+        modT.isVisible = false
+    end
+end
+
+
 hook.register("load", load_hook)
 -- Needs more testing before enabling:
 -- hook.register("restore", restore_hook)
@@ -184,3 +215,5 @@ hook.register("startup", startup_hook)
 hook.register("msgHook", msg_hook)
 hook.register("SiteName", site_name_hook)
 hook.register("packagebasename", packagebasename)
+hook.register("errWarnMsgHook", errwarnmsg_hook)
+hook.register("isVisibleHook", visible_hook)
