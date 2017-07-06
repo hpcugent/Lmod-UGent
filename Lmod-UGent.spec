@@ -2,7 +2,7 @@
 
 Name:           Lmod
 Version:        7.5.10
-Release:        3.ug%{?dist}
+Release:        4.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -90,7 +90,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Jul 6 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.5.10-3ug
+* Thu Jul 6 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.5.10-4.ug
 - update to Lmod 7.5.10
 - fix msg hooks in SitePackage.lua (thanks to Ward Poelmans)
 - remove patch for 'module' and 'ml', no longer needed
