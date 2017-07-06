@@ -37,6 +37,20 @@ Our configure options
   stating of all directories when the module path is extend after
   loading a cluster module
 
+Patches
+-------
+
+A (trivial) patch is applied to change the behaviour of 'module spider',
+to adhere to a policy specific to HPC-UGent.
+
+One or more hidden 'cluster' modules may be available for testing purposes.
+
+These are not intended to be used for production however, and so 'module spider'
+should not include these hidden cluster modules in the output.
+
+Recent versions of Lmod do show hidden modules in the output of 'module spider' by default,
+hence we patch our Lmod installation to behave otherwise.
+
 SitePackage
 -----------
 The SitePackage contains a couple of hooks:
