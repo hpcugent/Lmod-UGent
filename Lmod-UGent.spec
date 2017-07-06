@@ -1,7 +1,7 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        7.5.5
+Version:        7.5.10
 Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
@@ -83,8 +83,8 @@ install -Dpm 644 %{SOURCE4} %{buildroot}%{_datadir}/lmod/etc
 
 
 %changelog
-* Thu Jun 24 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.5.5-1ug
-- update to Lmod 7.5.5
+* Thu Jul 6 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.5.10-1ug
+- update to Lmod 7.5.10
 - fix msg hooks in SitePackage.lua (thanks to Ward Poelmans)
 - remove patch for 'module' and 'ml', no longer needed
 * Mon Nov 28 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.6-2ug
