@@ -106,7 +106,7 @@ local function startup_hook(usrCmd)
         and os.getenv("VSC_INSTITUTE_CLUSTER") then
 
         LmodWarning([['module load cluster' has no effect when a 'cluster' module is already loaded.
-        For more information, please see https://www.vscentrum.be/cluster-doc/software/modules/lmod#module_load_cluster]])
+For more information, please see https://www.vscentrum.be/cluster-doc/software/modules/lmod#module_load_cluster]])
 
         os.exit(0)
     end
@@ -143,7 +143,8 @@ local function errwarnmsg_hook(kind, key, msg, t)
 
         local errmsg = {"A different version of the '"..sname.."' module is already loaded (see output of 'ml')."}
         if not frameStk:empty() then
-            errmsg[#errmsg+1] = "You should load another '"..frameStk:sn().."' module for that is compatible with the currently loaded version of '"..sname.."'."
+            local compat_msg = "' module for that is compatible with the currently loaded version of '"
+            errmsg[#errmsg+1] = "You should load another '"..frameStk:sn()..compat_msg..sname.."'."
             errmsg[#errmsg+1] = "Use 'ml spider "..frameStk:sn().."' to get an overview of the available versions."
         end
         errmsg[#errmsg+1] = "\n"
@@ -192,6 +193,7 @@ local function packagebasename(t)
 end
 
 
+--[[
 local function visible_hook(modT)
     -- modT is a table with: fullName, sn, fn and isVisible
     -- The latter is a boolean to determine if a module is visible or not
@@ -206,6 +208,7 @@ local function visible_hook(modT)
         modT.isVisible = false
     end
 end
+]]--
 
 
 hook.register("load", load_hook)
