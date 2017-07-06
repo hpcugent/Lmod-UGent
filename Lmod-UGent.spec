@@ -1,8 +1,8 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        6.6
-Release:        4.ug%{?dist}
+Version:        7.5.10
+Release:        5.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -13,8 +13,9 @@ Source1:        macros.%{name}
 Source2:        SitePackage.lua
 Source3:        run_lmod_cache.py
 Source4:        admin.list
-Patch0:         Lmod-ml-rename-ld-path.patch
+Patch0:         Lmod-spider-no-hidden-cluster-modules.patch
 
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildArch:      noarch
 BuildRequires:  lua-filesystem
 BuildRequires:  lua-json
@@ -49,11 +50,13 @@ sed -i -e '/^#!/d' init/*.in
 
 
 %build
-%configure --prefix=%{_datadir} PS=/bin/ps --with-caseIndependentSorting=yes --with-redirect=yes --with-autoSwap=no --with-disableNameAutoSwap=yes --with-shortTime=86400 --with-pinVersions=yes --with-module-root-path=/etc/modulefiles/vsc --with-cachedLoads=yes
+%configure --prefix=%{_datadir} PS=/bin/ps --with-caseIndependentSorting=yes --with-redirect=yes --with-autoSwap=no --with-disableNameAutoSwap=yes --with-shortTime=86400 --with-pinVersions=yes --with-module-root-path=/etc/modulefiles/vsc --with-cachedLoads=yes --with-siteName='HPC-UGent'
 make %{?_smp_mflags}
 
 
 %install
+rm -rf $RPM_BUILD_ROOT
+
 %make_install
 # init scripts are sourced
 chmod -x %{buildroot}%{_datadir}/lmod/%{version}/init/*
@@ -73,6 +76,8 @@ install -Dpm 755 %{SOURCE3} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 mkdir -p %{buildroot}%{_datadir}/lmod/etc
 install -Dpm 644 %{SOURCE4} %{buildroot}%{_datadir}/lmod/etc
 
+%clean
+rm -rf %{buildroot}
 
 %files
 %doc INSTALL License README.md README_lua_modulefiles.txt
@@ -85,6 +90,12 @@ install -Dpm 644 %{SOURCE4} %{buildroot}%{_datadir}/lmod/etc
 
 
 %changelog
+* Thu Jul 6 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.5.10-5.ug
+- update to Lmod 7.5.10
+- fix msg hooks in SitePackage.lua (thanks to Ward Poelmans)
+- remove patch for 'module' and 'ml', no longer needed
+- add patch to avoid listing hidden cluster modules in output of 'ml spider'
+
 * Mon Nov 28 2016 Ward Poelmans <ward.poelmans@ugent.be> - 6.6-2ug
 - Install a admin.list (aka nag file)
 

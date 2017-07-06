@@ -39,13 +39,17 @@ Our configure options
 
 Patches
 -------
-We add one patch to clear the `$LD_LIBRARY_PATH` before any Lmod command is
-executed. This makes sure that Lmod keeps on working, no matter what
-modules are loaded. The original value of `$LD_LIBRARY_PATH` is saved to
-`$ORIG_LD_LIBRARY_PATH` and the startup hook (see below) will restore it
-when lua is already running. In this way, a new load will append to the correct
-value of `$LD_LIBRARY_PATH` and lua keeps on workings if other modules are loaded.
-The variable `LD_PRELOAD` gets the same treatment.
+
+A (trivial) patch is applied to change the behaviour of 'module spider',
+to adhere to a policy specific to HPC-UGent.
+
+One or more hidden 'cluster' modules may be available for testing purposes.
+
+These are not intended to be used for production however, and so 'module spider'
+should not include these hidden cluster modules in the output.
+
+Recent versions of Lmod do show hidden modules in the output of 'module spider' by default,
+hence we patch our Lmod installation to behave otherwise.
 
 SitePackage
 -----------
