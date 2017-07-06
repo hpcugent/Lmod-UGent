@@ -55,6 +55,8 @@ make %{?_smp_mflags}
 
 
 %install
+rm -rf $RPM_BUILD_ROOT
+
 %make_install
 # init scripts are sourced
 chmod -x %{buildroot}%{_datadir}/lmod/%{version}/init/*
