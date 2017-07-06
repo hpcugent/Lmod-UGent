@@ -132,10 +132,6 @@ local function errwarnmsg_hook(kind, key, msg, t)
     -- t is a table with the keys used in msg
     dbg.start{"errwarnmsg_hook"}
 
-    dbg.print{"kind: ", kind}
-    dbg.print{"Msg: ", msg}
-    dbg.print{"keys: ", t}
-
     if key == "e_No_AutoSwap" then
         -- find the module name causing the issue (almost always toolchain module)
         local sname = t.sn
