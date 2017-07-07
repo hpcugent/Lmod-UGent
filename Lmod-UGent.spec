@@ -2,7 +2,7 @@
 
 Name:           Lmod
 Version:        7.5.10
-Release:        5.ug%{?dist}
+Release:        6.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -90,6 +90,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 7 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.5.10-6.ug
+- fix grabbing $MODULEPATH root from Lmod config in run_lmod_cache.py, 'config' was renamed to 'configT' in Lmod 7
+
 * Thu Jul 6 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.5.10-5.ug
 - update to Lmod 7.5.10
 - fix msg hooks in SitePackage.lua (thanks to Ward Poelmans)
