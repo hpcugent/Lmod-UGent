@@ -56,7 +56,7 @@ def get_lmod_config():
         lmodconfig = json.loads(out)
 
         config = {
-            'modules_root': lmodconfig['config']['mpath_root'],
+            'modules_root': lmodconfig['configT']['mpath_root'],
             'cache_dir': lmodconfig['cache'][0][0],
             'cache_timestamp': lmodconfig['cache'][0][1],
         }
