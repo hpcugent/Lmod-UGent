@@ -1,8 +1,8 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        7.5.10
-Release:        7.ug%{?dist}
+Version:        7.7.4
+Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -14,7 +14,6 @@ Source2:        SitePackage.lua
 Source3:        run_lmod_cache.py
 Source4:        admin.list
 Patch0:         Lmod-spider-no-hidden-cluster-modules.patch
-Patch1:         Lmod/Lmod-7.5.10_fix-chkMP-cache.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildArch:      noarch
@@ -42,7 +41,6 @@ where the library and header files can be found.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 sed -i -e 's,/usr/bin/env ,/usr/bin/,' src/*.tcl
 # Remove bundled lua-term
 rm -r pkgs tools/json.lua
@@ -92,6 +90,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 29 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.7.4-1.ug
+- update to Lmod 7.7.4 (faster bash completion)
+
 * Thu Jul 13 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.5.10-7.ug
 - add patch to ensure Lmod cache is used when loading cluster modules which include prepend_path($MODULEPATH, ...)
 
