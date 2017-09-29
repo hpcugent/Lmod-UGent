@@ -1,7 +1,7 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        7.7.4
+Version:        7.7.5
 Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
@@ -90,8 +90,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Sep 29 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.7.4-1.ug
-- update to Lmod 7.7.4 (faster bash completion)
+* Fri Sep 29 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.7.5-1.ug
+- update to Lmod 7.7.5 (faster bash completion)
 
 * Thu Jul 13 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.5.10-7.ug
 - add patch to ensure Lmod cache is used when loading cluster modules which include prepend_path($MODULEPATH, ...)
