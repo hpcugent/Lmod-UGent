@@ -1,8 +1,8 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        7.7.5
-Release:        1.ug%{?dist}
+Version:        7.7.18
+Release:        1.bu%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -13,6 +13,7 @@ Source1:        macros.%{name}
 Source2:        SitePackage.lua
 Source3:        run_lmod_cache.py
 Source4:        admin.list
+Source5:        lang.lua
 Patch0:         Lmod-spider-no-hidden-cluster-modules.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -50,7 +51,7 @@ sed -i -e '/^#!/d' init/*.in
 
 
 %build
-%configure --prefix=%{_datadir} PS=/bin/ps --with-caseIndependentSorting=yes --with-redirect=yes --with-autoSwap=no --with-disableNameAutoSwap=yes --with-shortTime=86400 --with-pinVersions=yes --with-module-root-path=/etc/modulefiles/vsc --with-cachedLoads=yes --with-siteName='HPC-UGent'
+%configure --prefix=%{_datadir} PS=/bin/ps --with-caseIndependentSorting=yes --with-redirect=yes --with-autoSwap=no --with-disableNameAutoSwap=yes --with-shortTime=86400 --with-pinVersions=yes --with-cachedLoads=no --with-siteName=HPC-SISC --with-syshost=Hydra --with-siteMsgFile=%{_datadir}/lmod/etc/lang.lua
 make %{?_smp_mflags}
 
 
@@ -75,6 +76,8 @@ install -Dpm 755 %{SOURCE3} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 # install admin.list
 mkdir -p %{buildroot}%{_datadir}/lmod/etc
 install -Dpm 644 %{SOURCE4} %{buildroot}%{_datadir}/lmod/etc
+# add lang.lua file
+install -Dpm 644 %{SOURCE5} %{buildroot}%{_datadir}/lmod/etc
 
 %clean
 rm -rf %{buildroot}
@@ -90,6 +93,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 7 2018 Ward Poelmans <ward.poelmans@vub.be> - 7.7.18-1.bu
+- update to Lmod 7.7.18
+- Adjust to VUB flavour of Lmod (our own special sauce)
+
 * Fri Sep 29 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.7.5-1.ug
 - update to Lmod 7.7.5 (faster bash completion)
 
