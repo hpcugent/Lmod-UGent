@@ -2,7 +2,7 @@
 
 Name:           Lmod
 Version:        7.7.26
-Release:        1.ug%{?dist}
+Release:        3.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2

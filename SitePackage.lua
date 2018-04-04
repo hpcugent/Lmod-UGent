@@ -167,7 +167,8 @@ local function msg_hook(mode, output)
     dbg.print{"Mode is ", mode, "\n"}
 
     if mode == "avail" then
-        output[#output+1] = "\nIf you need software that is not listed, request it at hpc@ugent.be\n"
+        local request_url = 'https://www.ugent.be/hpc/en/support/software-installation-request'
+        output[#output+1] = "\nIf you need software that is not listed, request it via "..request_url.."\n"
     end
 
     dbg.fini()
