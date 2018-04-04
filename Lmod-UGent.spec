@@ -1,7 +1,7 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        7.7.5
+Version:        7.7.26
 Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
@@ -44,7 +44,7 @@ where the library and header files can be found.
 sed -i -e 's,/usr/bin/env ,/usr/bin/,' src/*.tcl
 # Remove bundled lua-term
 rm -r pkgs tools/json.lua
-#sed -i -e 's, pkgs , ,' Makefile.in
+sed -i -e 's/^spiderCacheSupport: lfs/spiderCacheSupport: /' Makefile.in
 # Remove unneeded shbangs
 sed -i -e '/^#!/d' init/*.in
 
@@ -90,6 +90,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 4 2018 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.7.26-1.ug
+- update to Lmod 7.7.26 (clean error when cache file can not be read & more)
+
 * Fri Sep 29 2017 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.7.5-1.ug
 - update to Lmod 7.7.5 (faster bash completion)
 
