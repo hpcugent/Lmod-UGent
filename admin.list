@@ -30,3 +30,7 @@ jobs/1.0.2: Do not use the jobs module anymore. Load the vsc-mympirun module dir
 
 jobs/2.0.0: Do not use the jobs module anymore. Load the vsc-mympirun module directly.
 
+Stacks/2.0-intel-2018a:
+This Stacks installation is known to have problems,
+please use Stacks/2.0-foss-2018a or a more recent Stacks module instead.
+
