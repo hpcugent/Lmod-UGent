@@ -1,8 +1,8 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        7.7.26
-Release:        3.ug%{?dist}
+Version:        7.8.4
+Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -90,6 +90,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 26 2018 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.8.4-1.ug
+- update to Lmod 7.8.4 + tweak admin.list
+
 * Wed Apr 4 2018 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.7.26-1.ug
 - update to Lmod 7.7.26 (clean error when cache file can not be read & more)
 
