@@ -6,6 +6,8 @@ scripts/3.2.1: Do not load a specific version of the scripts module. Load the vs
 
 scripts/4.0.0: Do not load a specific version of the scripts module. Load the vsc-mympirun module directly.
 
+scripts/5.0.0: Do not load a specific version of the scripts module. Load the vsc-mympirun module directly.
+
 VSC-tools/0.1.3-ictce-4.1.13-scoop: Do not use the VSC-tools module anymore. Load the vsc-mympirun module directly.
 
 VSC-tools/0.1.5-ictce-4.1.13-scoop: Do not use the VSC-tools module anymore. Load the vsc-mympirun module directly.
