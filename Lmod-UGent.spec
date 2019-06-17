@@ -62,7 +62,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %make_install
 # init scripts are sourced
-chmod -x %{buildroot}%{_datadir}/lmod/%{version}/init/*
+find %{buildroot}%{_datadir}/lmod/%{version}/init/ -type f -print0 | xargs -0 chmod -x
 mkdir -p %{buildroot}%{_sysconfdir}/modulefiles
 mkdir -p %{buildroot}%{_datadir}/modulefiles
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
