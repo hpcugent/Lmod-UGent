@@ -1,8 +1,8 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        7.8.19
-Release:        2.ug%{?dist}
+Version:        8.1.16
+Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -16,11 +16,14 @@ Source4:        admin.list
 Patch0:         Lmod-spider-no-hidden-cluster-modules.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildArch:      noarch
+# Lmod 8.x ships binaries when configured with --with-fastTCLInterp=yes (which is the default)
+# BuildArch:      noarch
+BuildRequires:  lua-devel
 BuildRequires:  lua-filesystem
 BuildRequires:  lua-json
 BuildRequires:  lua-posix
 BuildRequires:  lua-term
+BuildRequires:  tcl-devel
 Requires:       lua-filesystem
 Requires:       lua-json
 Requires:       lua-posix
@@ -43,7 +46,7 @@ where the library and header files can be found.
 %patch0 -p1
 sed -i -e 's,/usr/bin/env ,/usr/bin/,' src/*.tcl
 # Remove bundled lua-term
-rm -r pkgs tools/json.lua
+rm -r pkgs/luafilesystem/ pkgs/term/ tools/json.lua
 sed -i -e 's/^spiderCacheSupport: lfs/spiderCacheSupport: /' Makefile.in
 # Remove unneeded shbangs
 sed -i -e '/^#!/d' init/*.in
@@ -59,7 +62,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %make_install
 # init scripts are sourced
-chmod -x %{buildroot}%{_datadir}/lmod/%{version}/init/*
+find %{buildroot}%{_datadir}/lmod/%{version}/init/ -type f -print0 | xargs -0 chmod -x
 mkdir -p %{buildroot}%{_sysconfdir}/modulefiles
 mkdir -p %{buildroot}%{_datadir}/modulefiles
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
@@ -90,6 +93,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 7 2019 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.1.13-1.ug
+  - update to Lmod 8.1.16
+
 * Wed Sep 26 2018 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.8.4-1.ug
 - update to Lmod 7.8.4 + tweak admin.list
 
