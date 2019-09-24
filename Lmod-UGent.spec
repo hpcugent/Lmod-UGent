@@ -1,7 +1,7 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        8.1.16
+Version:        8.1.17
 Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
@@ -93,7 +93,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Aug 7 2019 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.1.13-1.ug
+* Tue Sep 24 2019 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.1.17-1.ug
+  - update to Lmod 8.1.17 (restores 'module switch')
+
+* Mon Sep 23 2019 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.1.16-1.ug
   - update to Lmod 8.1.16
 
 * Wed Sep 26 2018 Kenneth Hoste <kenneth.hoste@ugent.be> - 7.8.4-1.ug
