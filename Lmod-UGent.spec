@@ -30,6 +30,11 @@ Requires:       lua-posix
 Requires:       lua-term
 Requires:       tcl
 Requires:       /bin/ps
+%if 0%{?fedora} || 0%{?rhel} > 7
+Requires:       python3-vsc-install
+%else
+Requires:       python-vsc-install
+%endif
 Conflicts:      environment-modules
 
 %description
