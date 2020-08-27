@@ -1,4 +1,4 @@
-#!/usr/bin/python -E
+#!/usr/bin/python-stripped-env
 # -*- encoding: utf-8 -*-
 #
 # Copyright 2016-2016 Ghent University
