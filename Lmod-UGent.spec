@@ -2,7 +2,7 @@
 
 Name:           Lmod
 Version:        8.2.5
-Release:        1.ug%{?dist}
+Release:        2.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -30,6 +30,11 @@ Requires:       lua-posix
 Requires:       lua-term
 Requires:       tcl
 Requires:       /bin/ps
+%if 0%{?fedora} || 0%{?rhel} > 7
+Requires:       python3-vsc-install
+%else
+Requires:       python-vsc-install
+%endif
 Conflicts:      environment-modules
 
 %description
