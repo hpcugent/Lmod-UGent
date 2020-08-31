@@ -1,8 +1,8 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        8.2.5
-Release:        2.ug%{?dist}
+Version:        8.4.2
+Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -36,6 +36,7 @@ Requires:       python3-vsc-install
 Requires:       python-vsc-install
 %endif
 Conflicts:      environment-modules
+Provides:       environment(modules)
 
 %description
 Lmod is a Lua based module system that easily handles the MODULEPATH
@@ -98,6 +99,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 31 2020 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.4.2-1.ug
+  - update to Lmod 8.4.2 + add 'Provides: environment(modules)' to spec file
+
 * Tue Nov 26 2019 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.2.5-1.ug
   - update to Lmod 8.2.5 (support for extensions)
 
