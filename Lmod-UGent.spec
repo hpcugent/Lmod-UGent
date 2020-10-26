@@ -1,7 +1,7 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        8.4.10
+Version:        8.4.2
 Release:        2.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
@@ -101,6 +101,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 26 2020 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.4.2-2.ug
+  - roll back to Lmod 8.4.2 because of bug in Lmod 8.4.10 (https://github.com/TACC/Lmod/issues/476)
+
 * Mon Oct 26 2020 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.4.10-2.ug
   - update to Lmod 8.4.10 and add patch to also compile Lmod spider cache with alternate Lua versions
 
