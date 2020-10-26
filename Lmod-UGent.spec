@@ -101,7 +101,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Oct 26 2020 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.4.10-1.ug
+* Mon Oct 26 2020 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.4.10-2.ug
   - update to Lmod 8.4.10 and add patch to also compile Lmod spider cache with alternate Lua versions
 
 * Mon Aug 31 2020 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.4.2-1.ug
