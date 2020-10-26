@@ -1,7 +1,7 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        8.4.2
+Version:        8.4.10
 Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
@@ -14,6 +14,7 @@ Source2:        SitePackage.lua
 Source3:        run_lmod_cache.py
 Source4:        admin.list
 Patch0:         Lmod-spider-no-hidden-cluster-modules.patch
+Patch1:         Lmod-compile-cache-alt-lua-versions.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 # Lmod 8.x ships binaries when configured with --with-fastTCLInterp=yes (which is the default)
@@ -50,6 +51,7 @@ where the library and header files can be found.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 sed -i -e 's,/usr/bin/env ,/usr/bin/,' src/*.tcl
 # Remove bundled lua-term
 rm -r pkgs/luafilesystem/ pkgs/term/ tools/json.lua
@@ -99,6 +101,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 26 2020 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.4.10-1.ug
+  - update to Lmod 8.4.10 and add patch to also compile Lmod spider cache with alternate Lua versions
+
 * Mon Aug 31 2020 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.4.2-1.ug
   - update to Lmod 8.4.2 + add 'Provides: environment(modules)' to spec file
 
