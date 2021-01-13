@@ -2,7 +2,7 @@
 
 Name:           Lmod
 Version:        8.4.12
-Release:        1.ug%{?dist}
+Release:        2.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -13,6 +13,7 @@ Source1:        macros.%{name}
 Source2:        SitePackage.lua
 Source3:        run_lmod_cache.py
 Source4:        admin.list
+Source5:        modulecmd
 Patch0:         Lmod-spider-no-hidden-cluster-modules.patch
 Patch1:         Lmod-compile-cache-alt-lua-versions.patch
 
@@ -86,6 +87,9 @@ install -Dpm 755 %{SOURCE3} %{buildroot}%{_datadir}/lmod/%{version}/libexec
 # install admin.list
 mkdir -p %{buildroot}%{_datadir}/lmod/etc
 install -Dpm 644 %{SOURCE4} %{buildroot}%{_datadir}/lmod/etc
+# install modulecmd
+mkdir -p %{buildroot}/%{_bindir}
+install -Dpm 755 %{SOURCE5} %{buildroot}/%{_bindir}
 
 %clean
 rm -rf %{buildroot}
@@ -98,7 +102,7 @@ rm -rf %{buildroot}
 %{_datadir}/lmod
 %{_datadir}/modulefiles
 %{macrosdir}/macros.%{name}
-
+%{_bindir}/modulecmd
 
 %changelog
 * Thu Nov 5 2020 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.4.12-1.ug
