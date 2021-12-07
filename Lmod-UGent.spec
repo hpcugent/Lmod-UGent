@@ -2,7 +2,7 @@
 
 Name:           Lmod
 Version:        8.4.12
-Release:        2.ug%{?dist}
+Release:        3.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
 # Lmod-5.3.2/tools/base64.lua is LGPLv2
@@ -26,6 +26,13 @@ BuildRequires:  lua-json
 BuildRequires:  lua-posix
 BuildRequires:  lua-term
 BuildRequires:  tcl-devel
+
+Requires:  Lmod-core = %{version}
+Conflicts:      environment-modules
+Provides:       environment(modules)
+
+%package core
+Summary:        Core files for Environmental Modules System in Lua
 Requires:       lua-filesystem
 Requires:       lua-json
 Requires:       lua-posix
@@ -37,8 +44,6 @@ Requires:       python3-vsc-install
 %else
 Requires:       python-vsc-install
 %endif
-Conflicts:      environment-modules
-Provides:       environment(modules)
 
 %description
 Lmod is a Lua based module system that easily handles the MODULEPATH
@@ -48,6 +53,8 @@ easily adding or removing directories to the PATH environment variable.
 Modulefiles for library packages provide environment variables that specify
 where the library and header files can be found.
 
+%description core
+Provides core files for Lmod (i.e. no compatibility, profile.d,...)
 
 %prep
 %setup -q
@@ -95,14 +102,16 @@ install -Dpm 755 %{SOURCE5} %{buildroot}/%{_bindir}
 rm -rf %{buildroot}
 
 %files
-%doc INSTALL License README.md README_lua_modulefiles.txt
-%{_sysconfdir}/modulefiles
+%{_bindir}/modulecmd
 %{_sysconfdir}/profile.d/modules.csh
 %{_sysconfdir}/profile.d/modules.sh
-%{_datadir}/lmod
+%{_sysconfdir}/modulefiles
 %{_datadir}/modulefiles
 %{macrosdir}/macros.%{name}
-%{_bindir}/modulecmd
+
+%files core
+%doc INSTALL License README.md README_lua_modulefiles.txt
+%{_datadir}/lmod
 
 %changelog
 * Thu Nov 5 2020 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.4.12-1.ug
