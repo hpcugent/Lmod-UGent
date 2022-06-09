@@ -1,10 +1,12 @@
+don't show hidden cluster modules in output of 'module spider'
+
 diff --git a/src/Spider.lua b/src/Spider.lua
-index 095a8f44..ec89b33b 100644
+index 25999e19..cf305843 100644
 --- a/src/Spider.lua
 +++ b/src/Spider.lua
-@@ -1282,8 +1282,10 @@ function M._Level2(self, sn, fullName, entryA, entryPA, possibleA, tailMsg)
-             for j = 1, #entryT.parentAA do
-                local parentA = entryT.parentAA[j]
+@@ -1390,8 +1390,10 @@ function M._Level2(self, sn, fullName, entryA, entryPA, possibleA, tailMsg)
+             for j = 1, #my_entryT.parentAA do
+                local parentA = my_entryT.parentAA[j]
                 for i = 1, #parentA do
 -                  b[#b+1] = parentA[i]
 -                  b[#b+1] = '  '
