@@ -146,6 +146,12 @@ local function errwarnmsg_hook(kind, key, msg, t)
         errmsg[#errmsg+1] = "\n"
 
         msg = table.concat(errmsg, "\n")
+
+    -- customise warning that is produced when a module that a cluster/ module depends on gets unloaded;
+    -- default: "The following dependent module(s) are not currently loaded"
+    elseif key == "w_MissingModules" then
+        dbg.print(t)
+        msg = "blah blah blah"
     end
 
     if kind == "lmoderror" or kind == "lmodwarning" then
