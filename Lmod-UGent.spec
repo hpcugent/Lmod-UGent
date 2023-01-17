@@ -1,7 +1,7 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        8.7.4
+Version:        8.7.56
 Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
@@ -114,6 +114,9 @@ rm -rf %{buildroot}
 %{_datadir}/lmod
 
 %changelog
+* Wed Feb 5 2025 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.7.56-1.ug
+  - update to Lmod 8.7.56
+
 * Wed Jun 8 2022 Kenneth Hoste <kenneth.hoste@ugent.be> - 8.7.4-1.ug
   - update to Lmod 8.7.4
 
