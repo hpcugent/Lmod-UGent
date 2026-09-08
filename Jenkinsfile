@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def RPMLINT_VERSION = "1.9"
+def RPMLINT_VERSION = "1.11"
 
 node {
     stage 'Checkout'

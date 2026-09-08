@@ -26,11 +26,11 @@ local function logmsg(logTbl)
     local jobid = os.getenv("PBS_JOBID") or ""
     local user = os.getenv("USER")
 
-    local msg = string.format("username=%s, cluster=%s, jobid=%s",
+    local msg = string.format("username='%s', cluster='%s', jobid='%s'",
                               user, cluster, jobid)
 
     for _, val in ipairs(logTbl) do
-        msg = msg .. string.format(", %s=%s", val[1], val[2] or "")
+        msg = msg .. string.format(", %s='%s'", val[1], val[2] or "")
     end
 
     lmod_system_execute("/bin/logger -t lmod -p user.notice -- " .. msg)
@@ -84,13 +84,18 @@ end
 ]]--
 
 
-local function startup_hook(usrCmd)
+local function startup_hook(usrCmdRaw)
     -- This hook is called right after starting Lmod
     -- usrCmd holds the currect active command
     dbg.start{"startup_hook"}
 
     -- masterTbl has all info about the arguments passed to Lmod
     local masterTbl = masterTbl()
+
+    dbg.print{"Received raw usrCmd: ", usrCmdRaw, "\n"}
+    -- only keep last part of usrCmd value, since some Lmod versions include debug info and spaces in it,
+    -- see https://github.com/TACC/Lmod/issues/857
+    local usrCmd = type(usrCmdRaw) == "string" and usrCmdRaw:match("%S+$")
 
     dbg.print{"Received usrCmd: ", usrCmd, "\n"}
     dbg.print{"masterTbl:", masterTbl, "\n"}
