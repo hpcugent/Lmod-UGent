@@ -1,7 +1,7 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           Lmod
-Version:        9.4
+Version:        9.4.2
 Release:        1.ug%{?dist}
 Summary:        Environmental Modules System in Lua
 
@@ -114,6 +114,9 @@ rm -rf %{buildroot}
 %{_datadir}/lmod
 
 %changelog
+* Fri Sep 11 2026 Kenneth Hoste <kenneth.hoste@ugent.be> - 9.4.2-1.ug
+  - update to Lmod 9.4.2
+
 * Tue Sep 8 2026 Kenneth Hoste <kenneth.hoste@ugent.be> - 9.4-1.ug
   - update to Lmod 9.4
 
