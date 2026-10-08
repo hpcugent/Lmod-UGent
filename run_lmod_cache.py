@@ -97,7 +97,7 @@ def main():
         # give a warning when the cache is older then --freshness-threshold
         if (time.time() - timestamp.st_mtime) > opts.options.freshness_threshold * 60:
             errmsg = "Lmod cache is not fresh"
-            logger.warn(errmsg)
+            logger.warning(errmsg)
             opts.warning(errmsg)
             sys.exit(NAGIOS_EXIT_WARNING)
 
